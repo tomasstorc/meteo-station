@@ -13,7 +13,7 @@ const dataSchema = new mongoose.Schema<IData>(
     timeseries: {
       timeField: "timestamp",
       metaField: "metadata",
-      granularity: "hours",
+      granularity: "minutes",
     },
   }
 );

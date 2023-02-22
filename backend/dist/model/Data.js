@@ -14,7 +14,7 @@ const dataSchema = new mongoose_1.default.Schema({
     timeseries: {
         timeField: "timestamp",
         metaField: "metadata",
-        granularity: "hours",
+        granularity: "minutes",
     },
 });
 const Data = mongoose_1.default.model("Data", dataSchema);
