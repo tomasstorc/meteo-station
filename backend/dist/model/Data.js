@@ -5,10 +5,22 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importDefault(require("mongoose"));
 const dataSchema = new mongoose_1.default.Schema({
-    name: String,
-    temperature: Number,
-    humidity: Number,
-    timestamp: Date,
+    devicename: {
+        type: String,
+        required: [true, "device name is required"],
+    },
+    temperature: {
+        type: Number,
+        required: [true, "temperature is required"],
+    },
+    humidity: {
+        type: Number,
+        required: [true, "humidity is required"],
+    },
+    timestamp: {
+        type: Date,
+        default: Date.now(),
+    },
     metadata: Object,
 }, {
     timeseries: {

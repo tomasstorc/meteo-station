@@ -3,10 +3,22 @@ import IData from "../interface/Data";
 
 const dataSchema = new mongoose.Schema<IData>(
   {
-    name: String,
-    temperature: Number,
-    humidity: Number,
-    timestamp: Date,
+    devicename: {
+      type: String,
+      required: [true, "device name is required"],
+    },
+    temperature: {
+      type: Number,
+      required: [true, "temperature is required"],
+    },
+    humidity: {
+      type: Number,
+      required: [true, "humidity is required"],
+    },
+    timestamp: {
+      type: Date,
+      default: Date.now(),
+    },
     metadata: Object,
   },
   {

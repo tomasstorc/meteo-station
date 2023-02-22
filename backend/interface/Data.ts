@@ -1,7 +1,7 @@
 export default interface IData {
   timestamp: Date;
   metadata: Object;
-  name: string;
+  devicename: string;
   temperature: Number;
   humidity: Number;
 }
