@@ -3,7 +3,6 @@ import jwt from "jsonwebtoken";
 import ErrorResponse from "../response/error-response";
 import AuthKey from "../model/AuthKey";
 import { CallbackError } from "mongoose";
-import { resolveSoa } from "dns";
 
 const isAuthenticated: RequestHandler = (
   req: Request,
