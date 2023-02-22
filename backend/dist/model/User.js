@@ -4,7 +4,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importDefault(require("mongoose"));
-const password_validator_1 = __importDefault(require("../utils/password-validator"));
 const userSchema = new mongoose_1.default.Schema({
     username: {
         min: [3, "password must be atleast 3 characters long"],
@@ -15,6 +14,14 @@ const userSchema = new mongoose_1.default.Schema({
     password: {
         type: String,
         required: [true, "password is required"],
-        validate: [password_validator_1.default, "password did not meet minimum requirements"],
+    },
+    role: {
+        type: String,
+        enum: {
+            values: ["admin", "user"],
+            message: `{VALUE} is not valid, must be admin or user`,
+        },
     },
 });
+const User = mongoose_1.default.model("User", userSchema);
+exports.default = User;

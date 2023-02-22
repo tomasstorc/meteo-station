@@ -12,6 +12,14 @@ const userSchema = new mongoose.Schema<IUser>({
   password: {
     type: String,
     required: [true, "password is required"],
-    validate: [validatePassword, "password did not meet minimum requirements"],
+  },
+  role: {
+    type: String,
+    enum: {
+      values: ["admin", "user"],
+      message: `{VALUE} is not valid, must be admin or user`,
+    },
   },
 });
+const User = mongoose.model<IUser>("User", userSchema);
+export default User;
