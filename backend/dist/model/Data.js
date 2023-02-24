@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importDefault(require("mongoose"));
 const dataSchema = new mongoose_1.default.Schema({
-    devicename: {
+    deviceid: {
         type: String,
         required: [true, "device name is required"],
     },

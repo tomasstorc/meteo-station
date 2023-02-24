@@ -9,9 +9,9 @@ const authKeySchema = new mongoose_1.default.Schema({
         type: String,
         required: [true, "key is required"],
     },
-    userId: {
+    deviceId: {
         type: mongoose_1.default.Schema.Types.ObjectId,
-        ref: "User",
+        ref: "Device",
     },
 });
 const AuthKey = mongoose_1.default.model("AuthKey", authKeySchema);

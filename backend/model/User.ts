@@ -16,10 +16,6 @@ const userSchema = new mongoose.Schema<IUser>({
   role: {
     type: String,
     default: "user",
-    enum: {
-      values: ["admin", "user"],
-      message: `{VALUE} is not valid, must be admin or user`,
-    },
   },
 });
 const User = mongoose.model<IUser>("User", userSchema);

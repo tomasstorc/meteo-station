@@ -3,7 +3,7 @@ import IData from "../interface/Data";
 
 const dataSchema = new mongoose.Schema<IData>(
   {
-    devicename: {
+    deviceid: {
       type: String,
       required: [true, "device name is required"],
     },
