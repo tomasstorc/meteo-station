@@ -6,8 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const AuthKey_1 = __importDefault(require("../model/AuthKey"));
 const error_response_1 = __importDefault(require("../response/error-response"));
 const isDeviceAuthenticated = (req, res, next) => {
-    const authHeader = req.headers["authorization"];
-    const deviceKey = authHeader && authHeader.split(" ")[1];
+    const deviceKey = req.headers["authorization"];
     if (!deviceKey)
         return res.status(401).json(new error_response_1.default("unauthorized"));
     AuthKey_1.default.findOne({ key: deviceKey, deviceId: req.body.id }, (err, foundKey) => {

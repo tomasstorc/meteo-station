@@ -9,8 +9,8 @@ const isDeviceAuthenticated: RequestHandler = (
   res: Response,
   next: NextFunction
 ) => {
-  const authHeader: string | undefined = req.headers["authorization"];
-  const deviceKey = authHeader && authHeader.split(" ")[1];
+  const deviceKey = req.headers["authorization"];
+
   if (!deviceKey)
     return res.status(401).json(new ErrorResponse("unauthorized"));
 

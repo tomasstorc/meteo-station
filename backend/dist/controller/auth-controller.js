@@ -34,6 +34,7 @@ router.post("/login", (req, res) => {
                 }
                 else {
                     const payload = {
+                        id: foundUser._id,
                         username: foundUser.username,
                         role: foundUser.role,
                     };
@@ -50,8 +51,8 @@ router.get("/refresh", isAuthenticated_1.default, (req, res) => {
     var _a, _b, _c;
     res.clearCookie("token");
     let payload = {
-        name: (_a = req.user) === null || _a === void 0 ? void 0 : _a.name,
-        email: (_b = req.user) === null || _b === void 0 ? void 0 : _b.email,
+        id: (_a = req.user) === null || _a === void 0 ? void 0 : _a._id,
+        username: (_b = req.user) === null || _b === void 0 ? void 0 : _b.name,
         role: (_c = req.user) === null || _c === void 0 ? void 0 : _c.role,
     };
     const token = jsonwebtoken_1.default.sign(payload, process.env.JWT_SECRET, {
