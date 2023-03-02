@@ -69,7 +69,11 @@ router.delete("/id", isAuthenticated_1.default, isOwner_1.default, (req, res) =>
     Device_1.default.findByIdAndDelete(req.params.id, (err, deletedDoc) => {
         if (err)
             return res.status(400).json(new error_response_1.default(err));
-        return res.status(200).json(new success_response_1.default("deleted"));
+        AuthKey_1.default.findOneAndDelete({ deviceId: req.params.id }, (err, deletedKey) => {
+            if (err)
+                return res.status(400).json(new error_response_1.default(err));
+            return res.status(200).json(new success_response_1.default("deleted"));
+        });
     });
 });
 exports.default = router;

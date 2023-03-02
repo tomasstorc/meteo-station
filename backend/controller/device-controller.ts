@@ -93,7 +93,13 @@ router.delete(
       req.params.id,
       (err: CallbackError | undefined, deletedDoc: Document<IDevice>) => {
         if (err) return res.status(400).json(new ErrorResponse(err));
-        return res.status(200).json(new SuccessResponse("deleted"));
+        AuthKey.findOneAndDelete(
+          { deviceId: req.params.id },
+          (err: CallbackError | undefined, deletedKey: Document<IAuthKey>) => {
+            if (err) return res.status(400).json(new ErrorResponse(err));
+            return res.status(200).json(new SuccessResponse("deleted"));
+          }
+        );
       }
     );
   }
