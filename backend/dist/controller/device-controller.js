@@ -11,6 +11,7 @@ const AuthKey_1 = __importDefault(require("../model/AuthKey"));
 const Device_1 = __importDefault(require("../model/Device"));
 const error_response_1 = __importDefault(require("../response/error-response"));
 const isOwnerOrUser_1 = __importDefault(require("../middleware/isOwnerOrUser"));
+const isOwner_1 = __importDefault(require("../middleware/isOwner"));
 const router = express_1.default.Router();
 router.get("/", isAuthenticated_1.default, (req, res) => {
     Device_1.default.find()
@@ -53,6 +54,20 @@ router.post("/", isAuthenticated_1.default, (req, res) => {
                 .status(201)
                 .json(new success_response_1.default("created", { device: savedDevice, key: savedKey }));
         });
+    });
+});
+router.put("/:id", isOwner_1.default, (req, res) => {
+    Device_1.default.findByIdAndUpdate(req.params.id, req.body, (err, updatedDevice) => {
+        if (err)
+            return res.status(400).json(new error_response_1.default(err));
+        return res.status(200).json(new success_response_1.default("updated"));
+    });
+});
+router.delete("/id", isOwner_1.default, (req, res) => {
+    Device_1.default.findByIdAndDelete(req.params.id, (err, deletedDoc) => {
+        if (err)
+            return res.status(400).json(new error_response_1.default(err));
+        return res.status(200).json(new success_response_1.default("deleted"));
     });
 });
 exports.default = router;

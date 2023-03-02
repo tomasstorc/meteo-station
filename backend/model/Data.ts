@@ -16,19 +16,16 @@ const dataSchema = new mongoose.Schema<IData>(
       required: [true, "humidity is required"],
     },
     timestamp: {
-      type: Date,
-      default: Date.now(),
+      type: Number,
     },
-    metadata: Object,
   },
   {
     timeseries: {
       timeField: "timestamp",
-      metaField: "metadata",
       granularity: "minutes",
     },
   }
 );
 
-const Data = mongoose.model("Data", dataSchema);
+const Data = mongoose.model<IData>("Data", dataSchema);
 export default Data;

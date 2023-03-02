@@ -29,7 +29,6 @@ router.post("/", (req, res) => {
             const user = new User_1.default({
                 username: req.body.username,
                 password: hash,
-                role: req.body.role,
             });
             user.save((err, savedUser) => {
                 if (err)

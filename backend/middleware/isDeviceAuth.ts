@@ -9,19 +9,19 @@ const isDeviceAuthenticated: RequestHandler = (
   res: Response,
   next: NextFunction
 ) => {
-  const deviceKey = req.headers["authorization"];
+  const deviceKey = req.headers["api-key"];
 
   if (!deviceKey)
     return res.status(401).json(new ErrorResponse("unauthorized"));
 
   AuthKey.findOne(
-    { key: deviceKey, deviceId: req.body.id },
+    { key: deviceKey, deviceId: req.body.deviceid },
     (err: CallbackError | undefined, foundKey: IAuthKey | undefined) => {
       if (err) return res.status(401).json(new ErrorResponse(err));
       if (!foundKey)
         return res.status(401).json(new ErrorResponse("invalid key"));
 
-      if (foundKey) next();
+      next();
     }
   );
 };

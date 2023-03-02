@@ -31,7 +31,6 @@ router.post("/", (req: Request, res: Response) => {
           const user = new User<IUser>({
             username: req.body.username,
             password: hash,
-            role: req.body.role,
           });
           user.save((err: CallbackError | undefined, savedUser: IUser) => {
             if (err) return res.status(400).json(new ErrorResponse(err));

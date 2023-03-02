@@ -4,7 +4,7 @@ import IUser from "../interface/User";
 
 const userSchema = new mongoose.Schema<IUser>({
   username: {
-    min: [3, "password must be atleast 3 characters long"],
+    min: [3, "username must be at least 3 characters long"],
     max: [15, "maximum number of characters exceeeded"],
     required: [true, "username is required"],
     type: String,
@@ -12,10 +12,6 @@ const userSchema = new mongoose.Schema<IUser>({
   password: {
     type: String,
     required: [true, "password is required"],
-  },
-  role: {
-    type: String,
-    default: "user",
   },
 });
 const User = mongoose.model<IUser>("User", userSchema);

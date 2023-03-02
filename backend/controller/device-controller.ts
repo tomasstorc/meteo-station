@@ -4,11 +4,12 @@ import isAuthenticated from "../middleware/isAuthenticated";
 import SuccessResponse from "../response/success-response";
 import AuthKey from "../model/AuthKey";
 import Device from "../model/Device";
-import { CallbackError } from "mongoose";
+import { CallbackError, Document } from "mongoose";
 import IDevice from "../interface/Device";
 import ErrorResponse from "../response/error-response";
 import IAuthKey from "../interface/AuthKey";
 import isOwnerOrUser from "../middleware/isOwnerOrUser";
+import isOwner from "../middleware/isOwner";
 
 const router = express.Router();
 
@@ -63,6 +64,27 @@ router.post("/", isAuthenticated, (req: Request, res: Response) => {
         );
     });
   });
+});
+
+router.put("/:id", isOwner, (req: Request, res: Response) => {
+  Device.findByIdAndUpdate(
+    req.params.id,
+    req.body,
+    (err: CallbackError | undefined, updatedDevice: Document<IDevice>) => {
+      if (err) return res.status(400).json(new ErrorResponse(err));
+      return res.status(200).json(new SuccessResponse("updated"));
+    }
+  );
+});
+
+router.delete("/id", isOwner, (req: Request, res: Response) => {
+  Device.findByIdAndDelete(
+    req.params.id,
+    (err: CallbackError | undefined, deletedDoc: Document<IDevice>) => {
+      if (err) return res.status(400).json(new ErrorResponse(err));
+      return res.status(200).json(new SuccessResponse("deleted"));
+    }
+  );
 });
 
 export default router;

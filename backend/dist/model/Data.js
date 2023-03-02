@@ -18,14 +18,11 @@ const dataSchema = new mongoose_1.default.Schema({
         required: [true, "humidity is required"],
     },
     timestamp: {
-        type: Date,
-        default: Date.now(),
+        type: Number,
     },
-    metadata: Object,
 }, {
     timeseries: {
         timeField: "timestamp",
-        metaField: "metadata",
         granularity: "minutes",
     },
 });
