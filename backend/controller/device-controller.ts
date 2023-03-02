@@ -13,16 +13,23 @@ import isOwner from "../middleware/isOwner";
 
 const router = express.Router();
 
-router.get("/", isAuthenticated, (req: Request, res: Response) => {
-  Device.find()
-    .or([{ owner: req.user.id }, { users: req.user.id }])
-    .exec((err: CallbackError | undefined, foundDevices: Array<IDevice>) => {
-      if (err) return res.status(400).json(new ErrorResponse(err));
-      if (foundDevices.length === 0)
-        return res.status(200).json(new SuccessResponse("no devices"));
-      return res.status(200).json(new SuccessResponse("success", foundDevices));
-    });
-});
+router.get(
+  "/",
+  isAuthenticated,
+  isOwnerOrUser,
+  (req: Request, res: Response) => {
+    Device.find()
+      .or([{ owner: req.user.id }, { users: req.user.id }])
+      .exec((err: CallbackError | undefined, foundDevices: Array<IDevice>) => {
+        if (err) return res.status(400).json(new ErrorResponse(err));
+        if (foundDevices.length === 0)
+          return res.status(200).json(new SuccessResponse("no devices"));
+        return res
+          .status(200)
+          .json(new SuccessResponse("success", foundDevices));
+      });
+  }
+);
 
 router.get(
   "/:id",
@@ -66,7 +73,7 @@ router.post("/", isAuthenticated, (req: Request, res: Response) => {
   });
 });
 
-router.put("/:id", isOwner, (req: Request, res: Response) => {
+router.put("/:id", isAuthenticated, isOwner, (req: Request, res: Response) => {
   Device.findByIdAndUpdate(
     req.params.id,
     req.body,
@@ -77,14 +84,19 @@ router.put("/:id", isOwner, (req: Request, res: Response) => {
   );
 });
 
-router.delete("/id", isOwner, (req: Request, res: Response) => {
-  Device.findByIdAndDelete(
-    req.params.id,
-    (err: CallbackError | undefined, deletedDoc: Document<IDevice>) => {
-      if (err) return res.status(400).json(new ErrorResponse(err));
-      return res.status(200).json(new SuccessResponse("deleted"));
-    }
-  );
-});
+router.delete(
+  "/id",
+  isAuthenticated,
+  isOwner,
+  (req: Request, res: Response) => {
+    Device.findByIdAndDelete(
+      req.params.id,
+      (err: CallbackError | undefined, deletedDoc: Document<IDevice>) => {
+        if (err) return res.status(400).json(new ErrorResponse(err));
+        return res.status(200).json(new SuccessResponse("deleted"));
+      }
+    );
+  }
+);
 
 export default router;

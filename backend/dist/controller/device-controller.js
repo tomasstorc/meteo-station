@@ -13,7 +13,7 @@ const error_response_1 = __importDefault(require("../response/error-response"));
 const isOwnerOrUser_1 = __importDefault(require("../middleware/isOwnerOrUser"));
 const isOwner_1 = __importDefault(require("../middleware/isOwner"));
 const router = express_1.default.Router();
-router.get("/", isAuthenticated_1.default, (req, res) => {
+router.get("/", isAuthenticated_1.default, isOwnerOrUser_1.default, (req, res) => {
     Device_1.default.find()
         .or([{ owner: req.user.id }, { users: req.user.id }])
         .exec((err, foundDevices) => {
@@ -21,7 +21,9 @@ router.get("/", isAuthenticated_1.default, (req, res) => {
             return res.status(400).json(new error_response_1.default(err));
         if (foundDevices.length === 0)
             return res.status(200).json(new success_response_1.default("no devices"));
-        return res.status(200).json(new success_response_1.default("success", foundDevices));
+        return res
+            .status(200)
+            .json(new success_response_1.default("success", foundDevices));
     });
 });
 router.get("/:id", isAuthenticated_1.default, isOwnerOrUser_1.default, (req, res) => {
@@ -56,14 +58,14 @@ router.post("/", isAuthenticated_1.default, (req, res) => {
         });
     });
 });
-router.put("/:id", isOwner_1.default, (req, res) => {
+router.put("/:id", isAuthenticated_1.default, isOwner_1.default, (req, res) => {
     Device_1.default.findByIdAndUpdate(req.params.id, req.body, (err, updatedDevice) => {
         if (err)
             return res.status(400).json(new error_response_1.default(err));
         return res.status(200).json(new success_response_1.default("updated"));
     });
 });
-router.delete("/id", isOwner_1.default, (req, res) => {
+router.delete("/id", isAuthenticated_1.default, isOwner_1.default, (req, res) => {
     Device_1.default.findByIdAndDelete(req.params.id, (err, deletedDoc) => {
         if (err)
             return res.status(400).json(new error_response_1.default(err));
