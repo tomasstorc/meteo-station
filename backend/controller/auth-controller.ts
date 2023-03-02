@@ -16,7 +16,7 @@ router.post("/login", (req: Request, res: Response) => {
 
   User.findOne(
     { email: body.email },
-    (err: Error | undefined, foundUser: IUser | undefined) => {
+    (err: Error | undefined, foundUser: any) => {
       if (!foundUser) {
         res
           .status(401)
@@ -36,6 +36,7 @@ router.post("/login", (req: Request, res: Response) => {
                 .json(new ErrorResponse("Username or password is incorrect"));
             } else {
               const payload = {
+                id: foundUser._id,
                 username: foundUser.username,
                 role: foundUser.role,
               };
@@ -55,8 +56,8 @@ router.post("/login", (req: Request, res: Response) => {
 router.get("/refresh", isAuthenticated, (req: Request, res: Response) => {
   res.clearCookie("token");
   let payload = {
-    name: req.user?.name,
-    email: req.user?.email,
+    id: req.user?._id,
+    username: req.user?.name,
     role: req.user?.role,
   };
   const token = jwt.sign(payload, process.env.JWT_SECRET, {

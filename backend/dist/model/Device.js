@@ -4,15 +4,21 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importDefault(require("mongoose"));
-const authKeySchema = new mongoose_1.default.Schema({
-    key: {
+const deviceSchema = new mongoose_1.default.Schema({
+    name: {
         type: String,
-        required: [true, "key is required"],
+        required: [true, "device name is required"],
     },
-    deviceId: {
+    owner: {
         type: mongoose_1.default.Schema.Types.ObjectId,
-        ref: "Device",
+        ref: "User",
     },
+    users: [
+        {
+            type: mongoose_1.default.Schema.Types.ObjectId,
+            ref: "User",
+        },
+    ],
 });
-const AuthKey = mongoose_1.default.model("AuthKey", authKeySchema);
-exports.default = AuthKey;
+const Device = mongoose_1.default.model("Device", deviceSchema);
+exports.default = Device;

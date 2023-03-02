@@ -6,9 +6,9 @@ const authKeySchema = new mongoose.Schema<IAuthKey>({
     type: String,
     required: [true, "key is required"],
   },
-  userId: {
+  deviceId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
+    ref: "Device",
   },
 });
 

@@ -8,6 +8,7 @@ const User_1 = __importDefault(require("../model/User"));
 const password_validator_1 = __importDefault(require("../utils/password-validator"));
 const error_response_1 = __importDefault(require("../response/error-response"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
+const success_response_1 = __importDefault(require("../response/success-response"));
 const router = express_1.default.Router();
 router.post("/", (req, res) => {
     if (!(0, password_validator_1.default)(req.body.password)) {
@@ -28,7 +29,11 @@ router.post("/", (req, res) => {
             const user = new User_1.default({
                 username: req.body.username,
                 password: hash,
-                role: req.body.role,
+            });
+            user.save((err, savedUser) => {
+                if (err)
+                    return res.status(400).json(new error_response_1.default(err));
+                return res.status(201).json(new success_response_1.default("user created"));
             });
         });
     });
