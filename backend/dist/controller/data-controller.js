@@ -4,13 +4,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
+const isAuthenticated_1 = __importDefault(require("../middleware/isAuthenticated"));
 const success_response_1 = __importDefault(require("../response/success-response"));
 const Data_1 = __importDefault(require("../model/Data"));
 const isDeviceAuth_1 = __importDefault(require("../middleware/isDeviceAuth"));
 const error_response_1 = __importDefault(require("../response/error-response"));
 const isOwnerOrUser_1 = __importDefault(require("../middleware/isOwnerOrUser"));
 const router = express_1.default.Router();
-router.get("/:id", isOwnerOrUser_1.default, (req, res) => {
+router.get("/:id", isAuthenticated_1.default, isOwnerOrUser_1.default, (req, res) => {
     Data_1.default.find({
         deviceid: req.params.id,
         timestamp: {
@@ -39,8 +40,7 @@ router.post("/", isDeviceAuth_1.default, (req, res) => {
             return res.status(400).json(new error_response_1.default(err));
         if (!savedData)
             res.status(400).json(new error_response_1.default("data not saved"));
-        return res.status(201);
+        return res.sendStatus(201);
     });
-    return res.json(new success_response_1.default("ok", req.body));
 });
 exports.default = router;
