@@ -1,19 +1,32 @@
 import React, { useState } from "react";
 import TextField from "@mui/material/TextField";
-import { Button, InputAdornment, Tab, Tabs, AppBar } from "@mui/material";
+import {
+  Button,
+  InputAdornment,
+  Tab,
+  Tabs,
+  AppBar,
+  Skeleton,
+  Alert,
+  CircularProgress,
+} from "@mui/material";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import PasswordIcon from "@mui/icons-material/Password";
 
 import { useDispatch, useSelector } from "react-redux";
 import { getLogin } from "../redux/loginSlice";
+import { createAccount } from "../redux/createAccountSlice";
+import { Navigate } from "react-router-dom";
 
 const LoginPage = () => {
   const [value, setValue] = useState(0);
+  const [confirm, setConfirm] = useState(false);
   const handleSign = (event, newValue) => {
     setValue(newValue);
   };
   const dispatch = useDispatch();
-  const { loading } = useSelector((state) => state.login);
+  const { loading, user } = useSelector((state) => state.login);
+  const { loadingNewAccount } = useSelector((state) => state.createAccount);
   const [loginData, setLoginData] = useState({ username: "", password: "" });
 
   const handleChange = (e) => {
@@ -21,11 +34,17 @@ const LoginPage = () => {
     setLoginData({ ...loginData, [name]: value });
   };
   const handleSubmit = () => {
-    console.log(loginData);
-    dispatch(getLogin(loginData));
+    if (value === 0) {
+      console.log(loginData);
+      dispatch(getLogin(loginData));
+    } else {
+      dispatch(createAccount(loginData));
+      setValue(0);
+      setConfirm(true);
+    }
   };
 
-  if (loading) return <p>Loading...</p>;
+  if (loading || loadingNewAccount) return <CircularProgress />;
 
   return (
     <div
@@ -57,7 +76,11 @@ const LoginPage = () => {
             <Tab label="Sign up" />
           </Tabs>
         </AppBar>
-
+        {confirm && (
+          <Alert severity="success">
+            Your account was successfully created! Now you can sign in
+          </Alert>
+        )}
         <TextField
           onChange={handleChange}
           className="d-flex align-items-center justify-content-center"
@@ -94,21 +117,16 @@ const LoginPage = () => {
           variant="standard"
         />
 
-        {value === 0 ? (
-          <Button
-            className="mt-2"
-            fullWidth
-            variant="contained"
-            onClick={handleSubmit}
-          >
-            Sign in
-          </Button>
-        ) : (
-          <Button className="mt-2" fullWidth variant="contained">
-            Sign up
-          </Button>
-        )}
+        <Button
+          className="mt-2"
+          fullWidth
+          variant="contained"
+          onClick={handleSubmit}
+        >
+          {value === 0 ? "Sign in" : "Sign up"}
+        </Button>
       </div>
+      {user && <Navigate to="/" />}
     </div>
   );
 };
