@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   users: [],
-  loading: false,
+  loadingNewAccount: false,
 };
 
 export const createAccount = createAsyncThunk(
@@ -15,7 +15,7 @@ export const createAccount = createAsyncThunk(
         authorization: `Bearer ${data.token}`,
       },
 
-      body: JSON.stringify(data.body),
+      body: JSON.stringify(data),
     })
       .then((data) => data.json())
       .catch((err) => err);
