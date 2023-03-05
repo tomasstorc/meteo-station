@@ -1,5 +1,8 @@
+import { Outlet } from "react-router-dom";
+import "bootstrap/dist/css/bootstrap.min.css";
+
 function App() {
-  return <>Hello world</>;
+  return <Outlet />;
 }
 
 export default App;
