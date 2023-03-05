@@ -13,6 +13,7 @@ const user_controller_1 = __importDefault(require("./controller/user-controller"
 const data_controller_1 = __importDefault(require("./controller/data-controller"));
 const auth_controller_1 = __importDefault(require("./controller/auth-controller"));
 const device_controller_1 = __importDefault(require("./controller/device-controller"));
+const key_controller_1 = __importDefault(require("./controller/key-controller"));
 const app = (0, express_1.default)();
 const port = process.env.PORT || 8080;
 dotenv_1.default.config();
@@ -24,6 +25,7 @@ app.use("/api/user", user_controller_1.default);
 app.use("/api/data", data_controller_1.default);
 app.use("/api/device", device_controller_1.default);
 app.use("/api/auth", auth_controller_1.default);
+app.use("/api/key", key_controller_1.default);
 (0, db_connect_1.default)();
 app.listen(port, () => {
     logger_1.default.info(`server running at port ${port}`);
