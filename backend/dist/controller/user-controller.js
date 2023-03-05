@@ -14,7 +14,7 @@ router.post("/", (req, res) => {
     if (!(0, password_validator_1.default)(req.body.password)) {
         return res
             .status(400)
-            .json(new error_response_1.default("password did not meet minimum criteria"));
+            .json(new error_response_1.default("Password did not meet minimum criteria. One upper case, one lower case, minimum 6 characters"));
     }
     User_1.default.findOne({ username: req.body.username }, (err, foundUser) => {
         if (err)
@@ -22,7 +22,7 @@ router.post("/", (req, res) => {
         if (foundUser)
             return res
                 .status(400)
-                .json(new error_response_1.default("user with given username already exist"));
+                .json(new error_response_1.default("User with given username already exist"));
         bcrypt_1.default.hash(req.body.password, 10, (err, hash) => {
             if (err)
                 return res.status(400).json(new error_response_1.default(err));

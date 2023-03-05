@@ -14,9 +14,10 @@ const router = express.Router();
 
 router.post("/login", (req: Request, res: Response) => {
   const body = req.body;
+  console.log(body);
 
   User.findOne(
-    { email: body.email },
+    { username: body.username },
     (err: Error | undefined, foundUser: any) => {
       if (!foundUser) {
         res
@@ -43,7 +44,7 @@ router.post("/login", (req: Request, res: Response) => {
               const token = jwt.sign(payload, process.env.JWT_SECRET, {
                 expiresIn: "7d",
               });
-
+              res.cookie("token", token);
               res.status(200).json(new SuccessResponse("logged in", token));
             }
           }

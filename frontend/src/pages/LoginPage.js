@@ -6,13 +6,12 @@ import {
   Tab,
   Tabs,
   AppBar,
-  Skeleton,
   Alert,
   CircularProgress,
+  FormHelperText,
 } from "@mui/material";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import PasswordIcon from "@mui/icons-material/Password";
-
 import { useDispatch, useSelector } from "react-redux";
 import { getLogin } from "../redux/loginSlice";
 import { createAccount } from "../redux/createAccountSlice";
@@ -20,31 +19,50 @@ import { Navigate } from "react-router-dom";
 
 const LoginPage = () => {
   const [value, setValue] = useState(0);
+  const [validate, setValidate] = useState(false);
   const [confirm, setConfirm] = useState(false);
+  const [showError, setShowError] = useState(false);
   const handleSign = (event, newValue) => {
     setValue(newValue);
   };
   const dispatch = useDispatch();
-  const { loading, user } = useSelector((state) => state.login);
-  const { loadingNewAccount } = useSelector((state) => state.createAccount);
+  const { loading, user, errorMsg } = useSelector((state) => state.login);
+  const { loadingNewAccount, errorMsg: errorMsg2 } = useSelector(
+    (state) => state.createAccount
+  );
   const [loginData, setLoginData] = useState({ username: "", password: "" });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+    if (name === "password") {
+      setValidate(validatePassword(value));
+    }
     setLoginData({ ...loginData, [name]: value });
   };
-  const handleSubmit = () => {
+
+  const validatePassword = (password) => {
+    const re = /^(?=.*[a-z])(?=.*[A-Z]).{6}/g;
+    return re.test(password);
+  };
+  const handleSubmit = (e) => {
     if (value === 0) {
-      console.log(loginData);
       dispatch(getLogin(loginData));
     } else {
-      dispatch(createAccount(loginData));
-      setValue(0);
-      setConfirm(true);
+      dispatch(createAccount(loginData))
+        .unwrap()
+        .then((payload) => {
+          if (payload.status === "error") {
+            setShowError(true);
+          } else {
+            setValue(0);
+            setConfirm(true);
+          }
+        });
     }
   };
 
   if (loading || loadingNewAccount) return <CircularProgress />;
+  console.log(user);
 
   return (
     <div
@@ -57,6 +75,7 @@ const LoginPage = () => {
         backgroundImage: `url("https://images.pexels.com/photos/844297/pexels-photo-844297.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2")`,
       }}
     >
+      {user && <Navigate replace to="/" />}
       <div
         style={{
           backgroundColor: "rgba(255,255,255, 0.7)",
@@ -81,6 +100,7 @@ const LoginPage = () => {
             Your account was successfully created! Now you can sign in
           </Alert>
         )}
+        {showError && <Alert severity="error">{errorMsg || errorMsg2}</Alert>}
         <TextField
           onChange={handleChange}
           className="d-flex align-items-center justify-content-center"
@@ -116,7 +136,12 @@ const LoginPage = () => {
           }}
           variant="standard"
         />
-
+        {!validate && loginData.password.length > 1 && (
+          <FormHelperText error>
+            Password must contain minimum 6 characters, one upper case and one
+            lower case
+          </FormHelperText>
+        )}
         <Button
           className="mt-2"
           fullWidth
@@ -126,7 +151,6 @@ const LoginPage = () => {
           {value === 0 ? "Sign in" : "Sign up"}
         </Button>
       </div>
-      {user && <Navigate to="/" />}
     </div>
   );
 };
