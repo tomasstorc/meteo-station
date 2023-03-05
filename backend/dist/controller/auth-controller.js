@@ -13,7 +13,8 @@ const isAuthenticated_1 = __importDefault(require("../middleware/isAuthenticated
 const router = express_1.default.Router();
 router.post("/login", (req, res) => {
     const body = req.body;
-    User_1.default.findOne({ email: body.email }, (err, foundUser) => {
+    console.log(body);
+    User_1.default.findOne({ username: body.username }, (err, foundUser) => {
         if (!foundUser) {
             res
                 .status(401)
@@ -40,6 +41,7 @@ router.post("/login", (req, res) => {
                     const token = jsonwebtoken_1.default.sign(payload, process.env.JWT_SECRET, {
                         expiresIn: "7d",
                     });
+                    res.cookie("token", token);
                     res.status(200).json(new success_response_1.default("logged in", token));
                 }
             });

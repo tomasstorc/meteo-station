@@ -9,7 +9,7 @@ const initialState = {
   loading: false,
   error: false,
   errorMsg: undefined,
-  user: null,
+  user: undefined,
   refresh: false,
 };
 

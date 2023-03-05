@@ -3,6 +3,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 const initialState = {
   users: [],
   loadingNewAccount: false,
+  errorMsg: undefined,
 };
 
 export const createAccount = createAsyncThunk(
