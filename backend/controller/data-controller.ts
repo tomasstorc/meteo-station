@@ -10,25 +10,30 @@ import isOwnerOrUser from "../middleware/isOwnerOrUser";
 
 const router = express.Router();
 
-router.get("/:id", isOwnerOrUser, (req: Request, res: Response) => {
-  Data.find(
-    {
-      deviceid: req.params.id,
-      timestamp: {
-        $lte: Date.now(),
-        $gte: new Date(Date.now() - 1000 * (60 * 5)),
+router.get(
+  "/:id",
+  isAuthenticated,
+  isOwnerOrUser,
+  (req: Request, res: Response) => {
+    Data.find(
+      {
+        deviceid: req.params.id,
+        timestamp: {
+          $lte: Date.now(),
+          $gte: new Date(Date.now() - 1000 * (60 * 5)),
+        },
       },
-    },
-    (err: CallbackError | undefined, foundData: Document<IData>) => {
-      if (err) return res.status(400).json(new ErrorResponse(err));
-      if (!foundData)
-        return res.status(200).json(new SuccessResponse("No data found"));
-      return res
-        .status(200)
-        .json(new SuccessResponse("ok", { data: foundData }));
-    }
-  );
-});
+      (err: CallbackError | undefined, foundData: Document<IData>) => {
+        if (err) return res.status(400).json(new ErrorResponse(err));
+        if (!foundData)
+          return res.status(200).json(new SuccessResponse("No data found"));
+        return res
+          .status(200)
+          .json(new SuccessResponse("ok", { data: foundData }));
+      }
+    );
+  }
+);
 
 router.post("/", isDeviceAuthenticated, (req: Request, res: Response) => {
   let newData = new Data<IData>({
@@ -40,9 +45,8 @@ router.post("/", isDeviceAuthenticated, (req: Request, res: Response) => {
   newData.save((err: CallbackError | undefined, savedData: IData) => {
     if (err) return res.status(400).json(new ErrorResponse(err));
     if (!savedData) res.status(400).json(new ErrorResponse("data not saved"));
-    return res.status(201);
+    return res.sendStatus(201);
   });
-  return res.json(new SuccessResponse("ok", req.body));
 });
 
 export default router;

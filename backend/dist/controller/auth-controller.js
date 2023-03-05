@@ -36,7 +36,6 @@ router.post("/login", (req, res) => {
                     const payload = {
                         id: foundUser._id,
                         username: foundUser.username,
-                        role: foundUser.role,
                     };
                     const token = jsonwebtoken_1.default.sign(payload, process.env.JWT_SECRET, {
                         expiresIn: "7d",
@@ -48,12 +47,11 @@ router.post("/login", (req, res) => {
     });
 });
 router.get("/refresh", isAuthenticated_1.default, (req, res) => {
-    var _a, _b, _c;
+    var _a, _b;
     res.clearCookie("token");
     let payload = {
         id: (_a = req.user) === null || _a === void 0 ? void 0 : _a._id,
         username: (_b = req.user) === null || _b === void 0 ? void 0 : _b.name,
-        role: (_c = req.user) === null || _c === void 0 ? void 0 : _c.role,
     };
     const token = jsonwebtoken_1.default.sign(payload, process.env.JWT_SECRET, {
         expiresIn: "7d",

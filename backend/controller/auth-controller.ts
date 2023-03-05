@@ -8,6 +8,7 @@ import IUser from "../interface/User";
 import ErrorResponse from "../response/error-response";
 import SuccessResponse from "../response/success-response";
 import isAuthenticated from "../middleware/isAuthenticated";
+import { Document } from "mongoose";
 
 const router = express.Router();
 
@@ -38,7 +39,6 @@ router.post("/login", (req: Request, res: Response) => {
               const payload = {
                 id: foundUser._id,
                 username: foundUser.username,
-                role: foundUser.role,
               };
               const token = jwt.sign(payload, process.env.JWT_SECRET, {
                 expiresIn: "7d",
@@ -58,7 +58,6 @@ router.get("/refresh", isAuthenticated, (req: Request, res: Response) => {
   let payload = {
     id: req.user?._id,
     username: req.user?.name,
-    role: req.user?.role,
   };
   const token = jwt.sign(payload, process.env.JWT_SECRET, {
     expiresIn: "7d",
