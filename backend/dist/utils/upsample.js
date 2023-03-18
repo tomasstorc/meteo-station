@@ -1,35 +1,25 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-function upsample(data) {
-    const upsampledData = [];
-    for (let i = 1; i < data.length; i++) {
-        const prev = data[i - 1];
-        const curr = data[i];
-        const prevTime = new Date(prev.timestamp).getTime();
-        const currTime = new Date(curr.timestamp).getTime();
-        const diff = currTime - prevTime;
-        upsampledData.push(prev);
-        if (diff > 60000) {
-            const numIntervals = Math.floor(diff / 60000);
-            const tempDiff = +curr.temperature - +prev.temperature;
-            const tempStep = tempDiff / (numIntervals + 1);
-            const humDiff = +curr.humidity - +prev.humidity;
-            const humStep = tempDiff / (numIntervals + 1);
-            const timeStep = 60000;
-            for (let j = 1; j <= numIntervals; j++) {
-                const temperature = +prev.temperature + tempStep * j;
-                const humidity = +prev.humidity + humStep * j;
-                const timestamp = new Date(prevTime + j * timeStep).toISOString();
-                upsampledData.push({
-                    timestamp,
-                    temperature,
-                    humidity,
-                    deviceId: data[i].deviceid,
-                });
-            }
+function linearInterpolation(data, interval) {
+    const interpolatedData = [];
+    let currentIndex = 0;
+    for (let i = 0; i < data.length - 1; i++) {
+        interpolatedData.push(data[i]);
+        const timeDifference = data[i + 1].timestamp - data[i].timestamp;
+        const steps = timeDifference / interval;
+        for (let j = 1; j < steps; j++) {
+            const weight = j / steps;
+            const interpolatedTemperature = data[i].temperature * (1 - weight) + data[i + 1].temperature * weight;
+            const interpolatedHumidity = data[i].humidity * (1 - weight) + data[i + 1].humidity * weight;
+            const interpolatedTimestamp = data[i].timestamp + j * interval;
+            interpolatedData.push({
+                timestamp: interpolatedTimestamp,
+                temperature: interpolatedTemperature,
+                humidity: interpolatedHumidity,
+            });
         }
     }
-    upsampledData.push(data[data.length - 1]);
-    return upsampledData;
+    interpolatedData.push(data[data.length - 1]);
+    return interpolatedData;
 }
-exports.default = upsample;
+exports.default = linearInterpolation;
