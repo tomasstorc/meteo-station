@@ -10,7 +10,7 @@ import React from "react";
 
 const DashboardItem = ({ name, data }) => {
   return (
-    <Card sx={{ maxWidth: 345 }} className="p-2 mt-3">
+    <Card sx={{ maxWidth: 345 }} className="p-2 m-3 col-md-6 col-sm-12">
       <CardActionArea>
         <Box sx={{ display: "flex" }}>
           <CardMedia
