@@ -4,6 +4,7 @@ import { Provider } from "react-redux";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import App from "./App";
 import Dashboard from "./pages/Dashboard";
+import DeviceManagementPage from "./pages/DeviceManagementPage";
 import LoginPage from "./pages/LoginPage";
 import { store } from "./redux/store";
 
@@ -15,6 +16,7 @@ root.render(
         <Routes>
           <Route path="" element={<App />}>
             <Route path="/" element={<Dashboard />} />
+            <Route path="/devices" element={<DeviceManagementPage />} />
             <Route path="/login" element={<LoginPage />} />
           </Route>
         </Routes>
