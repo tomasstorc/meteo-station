@@ -67,4 +67,9 @@ router.get("/refresh", isAuthenticated, (req: Request, res: Response) => {
   res.status(200).json(new SuccessResponse("refreshed", token));
 });
 
+router.get("/logout", (req: Request, res: Response) => {
+  res.clearCookie("token");
+  return res.redirect("/");
+});
+
 export default router;

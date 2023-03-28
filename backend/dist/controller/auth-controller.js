@@ -60,4 +60,8 @@ router.get("/refresh", isAuthenticated_1.default, (req, res) => {
     });
     res.status(200).json(new success_response_1.default("refreshed", token));
 });
+router.get("/logout", (req, res) => {
+    res.clearCookie("token");
+    return res.redirect("/");
+});
 exports.default = router;
