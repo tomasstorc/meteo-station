@@ -6,6 +6,8 @@ import ErrorResponse from "../response/error-response";
 import { CallbackError } from "mongoose";
 import bcrypt from "bcrypt";
 import SuccessResponse from "../response/success-response";
+import isAuthenticated from "../middleware/isAuthenticated";
+import isOwner from "../middleware/isOwner";
 
 const router = express.Router();
 
@@ -44,6 +46,19 @@ router.post("/", (req: Request, res: Response) => {
       );
     }
   );
+});
+
+router.get("/", isAuthenticated, (req: Request, res: Response) => {
+  const query = User.find().select(["username"]);
+  query.exec((err: CallbackError | undefined, foundUsers: Array<IUser>) => {
+    if (err) {
+      return res.status(400).json(new ErrorResponse(err));
+    }
+    if (foundUsers.length === 0) {
+      return res.status(204).json(new SuccessResponse("empty"));
+    }
+    return res.status(200).json(new SuccessResponse("success", foundUsers));
+  });
 });
 
 export default router;
