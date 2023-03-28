@@ -11,7 +11,6 @@ import AddIcon from "@mui/icons-material/Add";
 const DeviceManagementPage = () => {
   const [open, setOpen] = useState(false);
 
-  const handleOpen = () => setOpen(true);
   const dispatch = useDispatch();
   const { token } = useSelector((state) => state.login);
   const { allDevices, loading } = useSelector((state) => state.devices);
