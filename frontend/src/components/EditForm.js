@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Chip from "@mui/material/Chip";
 import {
   FormControl,
@@ -37,8 +37,9 @@ const names = [
   "Kelly Snyder",
 ];
 
-export default function EditForm({ open, onClose, add, setAdd }) {
+export default function EditForm({ open, onClose, deviceData }) {
   const dispatch = useDispatch();
+
   const { token } = useSelector((state) => state.login);
   const style = {
     position: "absolute",
@@ -53,7 +54,10 @@ export default function EditForm({ open, onClose, add, setAdd }) {
   };
 
   const [member, setMember] = useState([]);
-  const [data, setData] = useState({ deviceName: "", members: [] });
+  const [data, setData] = useState({
+    deviceName: deviceData ? deviceData?.name : "",
+    members: deviceData ? deviceData?.users : [],
+  });
   const handleChange = (event) => {
     const {
       target: { value },
@@ -64,7 +68,13 @@ export default function EditForm({ open, onClose, add, setAdd }) {
   };
   console.log(data.members);
   console.log(data.deviceName);
-
+  console.log(deviceData?.name);
+  useEffect(() => {
+    setData({
+      deviceName: deviceData?.name,
+      members: deviceData?.users,
+    });
+  }, [deviceData]);
   return (
     <Modal open={open}>
       <Box sx={style}>
@@ -110,7 +120,7 @@ export default function EditForm({ open, onClose, add, setAdd }) {
             </Select>
           </FormControl>
         </Box>
-        {add ? (
+        {deviceData?.id === undefined ? (
           <Button
             variant="contained"
             onClick={() => {
@@ -137,6 +147,7 @@ export default function EditForm({ open, onClose, add, setAdd }) {
                   name: data.deviceName,
                   users: data.members,
                 },
+                id: deviceData.id,
                 token,
               };
               dispatch(editDevice(payload));
@@ -151,7 +162,6 @@ export default function EditForm({ open, onClose, add, setAdd }) {
           variant="text"
           onClick={() => {
             onClose(false);
-            setAdd(false);
           }}
         >
           Close

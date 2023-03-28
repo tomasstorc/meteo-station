@@ -65,7 +65,7 @@ router.put("/:id", isAuthenticated_1.default, isOwner_1.default, (req, res) => {
         return res.status(200).json(new success_response_1.default("updated"));
     });
 });
-router.delete("/id", isAuthenticated_1.default, isOwner_1.default, (req, res) => {
+router.delete("/:id", isAuthenticated_1.default, isOwner_1.default, (req, res) => {
     Device_1.default.findByIdAndDelete(req.params.id, (err, deletedDoc) => {
         if (err)
             return res.status(400).json(new error_response_1.default(err));
