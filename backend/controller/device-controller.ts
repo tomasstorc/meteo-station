@@ -85,7 +85,7 @@ router.put("/:id", isAuthenticated, isOwner, (req: Request, res: Response) => {
 });
 
 router.delete(
-  "/id",
+  "/:id",
   isAuthenticated,
   isOwner,
   (req: Request, res: Response) => {

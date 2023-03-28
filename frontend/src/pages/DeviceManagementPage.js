@@ -10,7 +10,7 @@ import AddIcon from "@mui/icons-material/Add";
 
 const DeviceManagementPage = () => {
   const [open, setOpen] = useState(false);
-  const [add, setAdd] = useState(false);
+
   const handleOpen = () => setOpen(true);
   const dispatch = useDispatch();
   const { token } = useSelector((state) => state.login);
@@ -31,15 +31,14 @@ const DeviceManagementPage = () => {
             variant="contained"
             onClick={() => {
               setOpen(!open);
-              setAdd(true);
             }}
           >
             <AddIcon /> Add device
           </Button>
         </div>
-        <DeviceManagementTable handleOpen={handleOpen} data={allDevices} />
+        <DeviceManagementTable data={allDevices} />
       </Container>
-      <EditForm open={open} onClose={setOpen} add={add} setAdd={setAdd} />
+      <EditForm open={open} onClose={setOpen} />
     </div>
   );
 };

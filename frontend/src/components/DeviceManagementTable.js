@@ -1,9 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
 import DataTable from "react-data-table-component";
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import EditForm from "./EditForm";
+import DeleteModal from "./DeleteModal";
 
-const DeviceManagementTable = ({ handleOpen, data }) => {
+const DeviceManagementTable = ({ data }) => {
+  const [open, setOpen] = useState(false);
+  const [openDelete, setOpenDelete] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleOpenDelete = () => setOpenDelete(true);
+  const [deviceData, setDeviceData] = useState({
+    id: "",
+    name: "",
+    members: [],
+  });
+
   const columns = [
     {
       name: "Name",
@@ -22,6 +34,11 @@ const DeviceManagementTable = ({ handleOpen, data }) => {
           size={20}
           className="pointer"
           onClick={() => {
+            setDeviceData({
+              id: row._id,
+              name: row.name,
+              members: row.users,
+            });
             handleOpen();
           }}
         />
@@ -32,7 +49,18 @@ const DeviceManagementTable = ({ handleOpen, data }) => {
     {
       name: "Delete",
       selector: (row) => (
-        <DeleteIcon size={20} className="text-danger pointer" />
+        <DeleteIcon
+          size={20}
+          className="text-danger pointer"
+          onClick={() => {
+            setDeviceData({
+              id: row._id,
+              name: row.name,
+              members: row.users,
+            });
+            handleOpenDelete();
+          }}
+        />
       ),
       sortable: false,
       maxWidth: "10px",
@@ -40,12 +68,20 @@ const DeviceManagementTable = ({ handleOpen, data }) => {
   ];
 
   return (
-    <DataTable
-      className="mt-3"
-      columns={columns}
-      data={data}
-      pagination="true"
-    />
+    <>
+      <EditForm open={open} onClose={setOpen} deviceData={deviceData} />
+      <DeleteModal
+        open={openDelete}
+        onClose={setOpenDelete}
+        deviceData={deviceData}
+      />
+      <DataTable
+        className="mt-3"
+        columns={columns}
+        data={data}
+        pagination="true"
+      />
+    </>
   );
 };
 
