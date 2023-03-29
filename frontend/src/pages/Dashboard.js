@@ -20,7 +20,7 @@ const Dashboard = () => {
     <div className="row">
       <Navigation className="col" />
       <Container className="col mt-3">
-        <Typography variant="h4"> Dashboard</Typography>
+        <Typography variant="h4"> All devices</Typography>
         <div className="row">
           {allDevices?.map((d) => {
             return <DashboardItem name={d.name} data="23°C" />;
