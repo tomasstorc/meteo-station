@@ -54,6 +54,12 @@ router.post("/login", (req: Request, res: Response) => {
   );
 });
 
+router.get("/logout", (req: Request, res: Response) => {
+  res.clearCookie("token");
+
+  return res.redirect("/");
+});
+
 router.get("/refresh", isAuthenticated, (req: Request, res: Response) => {
   res.clearCookie("token");
   let payload = {
