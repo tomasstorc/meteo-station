@@ -20,6 +20,7 @@ router.get(
   (req: Request, res: Response) => {
     Device.find()
       .or([{ owner: req.user.id }, { users: req.user.id }])
+      .populate(["owner", "users"])
       .exec((err: CallbackError | undefined, foundDevices: Array<IDevice>) => {
         if (err) return res.status(400).json(new ErrorResponse(err));
         if (foundDevices.length === 0)
@@ -36,15 +37,14 @@ router.get(
   isAuthenticated,
   isOwnerOrUser,
   (req: Request, res: Response) => {
-    Device.findById(
-      req.params.id,
-      (err: CallbackError | undefined, foundDevice: IDevice) => {
+    Device.findById(req.params.id)
+      .populate(["owner", "users"])
+      .exec((err: CallbackError, foundDevice: any) => {
         if (err) return res.status(400).json(new ErrorResponse(err));
-        return res
-          .status(200)
-          .json(new SuccessResponse("success", foundDevice));
-      }
-    );
+        if (!foundDevice)
+          res.status(404).json(new ErrorResponse("no device found"));
+        return res.status(200).json(new SuccessResponse(foundDevice));
+      });
   }
 );
 

@@ -16,6 +16,7 @@ const router = express_1.default.Router();
 router.get("/", isAuthenticated_1.default, isOwnerOrUser_1.default, (req, res) => {
     Device_1.default.find()
         .or([{ owner: req.user.id }, { users: req.user.id }])
+        .populate(["owner", "users"])
         .exec((err, foundDevices) => {
         if (err)
             return res.status(400).json(new error_response_1.default(err));
@@ -27,12 +28,14 @@ router.get("/", isAuthenticated_1.default, isOwnerOrUser_1.default, (req, res) =
     });
 });
 router.get("/:id", isAuthenticated_1.default, isOwnerOrUser_1.default, (req, res) => {
-    Device_1.default.findById(req.params.id, (err, foundDevice) => {
+    Device_1.default.findById(req.params.id)
+        .populate(["owner", "users"])
+        .exec((err, foundDevice) => {
         if (err)
             return res.status(400).json(new error_response_1.default(err));
-        return res
-            .status(200)
-            .json(new success_response_1.default("success", foundDevice));
+        if (!foundDevice)
+            res.status(404).json(new error_response_1.default("no device found"));
+        return res.status(200).json(new success_response_1.default(foundDevice));
     });
 });
 router.post("/", isAuthenticated_1.default, (req, res) => {
