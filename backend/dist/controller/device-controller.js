@@ -16,7 +16,8 @@ const router = express_1.default.Router();
 router.get("/", isAuthenticated_1.default, isOwnerOrUser_1.default, (req, res) => {
     Device_1.default.find()
         .or([{ owner: req.user.id }, { users: req.user.id }])
-        .populate(["owner", "users"])
+        .populate("owner", "username")
+        .populate("users", "username")
         .exec((err, foundDevices) => {
         if (err)
             return res.status(400).json(new error_response_1.default(err));
