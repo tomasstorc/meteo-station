@@ -20,7 +20,8 @@ router.get(
   (req: Request, res: Response) => {
     Device.find()
       .or([{ owner: req.user.id }, { users: req.user.id }])
-      .populate(["owner", "users"])
+      .populate("owner", "username")
+      .populate("users", "username")
       .exec((err: CallbackError | undefined, foundDevices: Array<IDevice>) => {
         if (err) return res.status(400).json(new ErrorResponse(err));
         if (foundDevices.length === 0)
