@@ -24,16 +24,18 @@ router.get(
           $gte: new Date(Date.now() - 1000 * (60 * 5)),
         },
       },
-      (err: CallbackError | undefined, foundData: Document<IData>) => {
+      (err: CallbackError | undefined, foundData: Array<Document<IData>>) => {
         if (err) return res.status(400).json(new ErrorResponse(err));
         if (!foundData)
           return res.status(200).json(new SuccessResponse("No data found"));
+
         console.log(req.query.granularity);
 
         const finalData = processData(foundData, req.query.granularity || 5);
         return res
           .status(200)
           .json(new SuccessResponse("ok", { data: foundData }));
+
       }
     );
   }
