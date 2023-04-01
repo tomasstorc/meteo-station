@@ -24,7 +24,13 @@ router.get("/:id", isAuthenticated_1.default, isOwnerOrUser_1.default, (req, res
             return res.status(400).json(new error_response_1.default(err));
         if (!foundData)
             return res.status(200).json(new success_response_1.default("No data found"));
-        const finalData = (0, processData_1.default)(foundData, 5);
+
+        console.log(req.query.granularity);
+        const finalData = (0, processData_1.default)(foundData, req.query.granularity || 5);
+        return res
+            .status(200)
+            .json(new success_response_1.default("ok", { data: foundData }));
+
     });
 });
 router.post("/", isDeviceAuth_1.default, (req, res) => {

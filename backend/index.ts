@@ -11,6 +11,7 @@ import dataController from "./controller/data-controller";
 import authControlller from "./controller/auth-controller";
 import deviceController from "./controller/device-controller";
 import keyController from "./controller/key-controller";
+import dbSeed from "./utils/db-seed";
 
 const app = express();
 const port = process.env.PORT || 8080;
@@ -28,7 +29,7 @@ app.use("/api/auth", authControlller);
 app.use("/api/key", keyController);
 
 dbConnect();
-
+if (process.env.NODE_ENV !== "production") dbSeed();
 app.listen(port, () => {
   logger.info(`server running at port ${port}`);
 });

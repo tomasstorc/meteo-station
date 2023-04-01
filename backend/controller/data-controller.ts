@@ -28,7 +28,14 @@ router.get(
         if (err) return res.status(400).json(new ErrorResponse(err));
         if (!foundData)
           return res.status(200).json(new SuccessResponse("No data found"));
-        const finalData = processData(foundData, 5);
+
+        console.log(req.query.granularity);
+
+        const finalData = processData(foundData, req.query.granularity || 5);
+        return res
+          .status(200)
+          .json(new SuccessResponse("ok", { data: foundData }));
+
       }
     );
   }

@@ -22,15 +22,17 @@ const LoginPage = () => {
   const [validate, setValidate] = useState(false);
   const [confirm, setConfirm] = useState(false);
   const [showError, setShowError] = useState(false);
-  const handleSign = (event, newValue) => {
-    setValue(newValue);
-  };
+
   const dispatch = useDispatch();
   const { loading, user, errorMsg } = useSelector((state) => state.login);
   const { loadingNewAccount, errorMsg: errorMsg2 } = useSelector(
     (state) => state.createAccount
   );
   const [loginData, setLoginData] = useState({ username: "", password: "" });
+  const handleSign = (event, newValue) => {
+    setValue(newValue);
+    setLoginData({ username: "", password: "" });
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -136,7 +138,7 @@ const LoginPage = () => {
           }}
           variant="standard"
         />
-        {!validate && loginData.password.length > 1 && (
+        {!validate && value === 1 && loginData.password.length > 1 && (
           <FormHelperText error>
             Password must contain minimum 6 characters, one upper case and one
             lower case

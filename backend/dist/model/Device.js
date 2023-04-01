@@ -15,7 +15,7 @@ const deviceSchema = new mongoose_1.default.Schema({
     },
     users: [
         {
-            type: mongoose_1.default.Schema.Types.ObjectId,
+            type: String,
             ref: "User",
         },
     ],
