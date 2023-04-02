@@ -5,7 +5,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditForm from "./EditForm";
 import DeleteModal from "./DeleteModal";
 
-const DeviceManagementTable = ({ data }) => {
+const DeviceManagementTable = ({ data, users }) => {
   const [open, setOpen] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
   const handleOpen = () => setOpen(true);
@@ -69,7 +69,12 @@ const DeviceManagementTable = ({ data }) => {
 
   return (
     <>
-      <EditForm open={open} onClose={setOpen} deviceData={deviceData} />
+      <EditForm
+        open={open}
+        onClose={setOpen}
+        deviceData={deviceData}
+        users={users}
+      />
       <DeleteModal
         open={openDelete}
         onClose={setOpenDelete}

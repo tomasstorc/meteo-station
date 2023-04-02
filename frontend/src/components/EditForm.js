@@ -24,20 +24,8 @@ const MenuProps = {
     },
   },
 };
-const names = [
-  "Oliver Hansen",
-  "Van Henry",
-  "April Tucker",
-  "Ralph Hubbard",
-  "Omar Alexander",
-  "Carlos Abbott",
-  "Miriam Wagner",
-  "Bradley Wilkerson",
-  "Virginia Andrews",
-  "Kelly Snyder",
-];
 
-export default function EditForm({ open, onClose, deviceData }) {
+export default function EditForm({ open, onClose, deviceData, users }) {
   const dispatch = useDispatch();
 
   const { token } = useSelector((state) => state.login);
@@ -66,19 +54,19 @@ export default function EditForm({ open, onClose, deviceData }) {
 
     setData({ deviceName: data.deviceName, members: event.target.value });
   };
-  console.log(data.members);
-  console.log(data.deviceName);
-  console.log(deviceData?.name);
+
   useEffect(() => {
     setData({
       deviceName: deviceData?.name,
       members: deviceData?.users,
     });
   }, [deviceData]);
+
   return (
     <Modal open={open}>
       <Box sx={style}>
         <h5>Edit device</h5>
+
         <Box sx={{ display: "flex", flexDirection: "column" }}>
           <TextField
             onChange={(e) => {
@@ -112,9 +100,9 @@ export default function EditForm({ open, onClose, deviceData }) {
               )}
               MenuProps={MenuProps}
             >
-              {names.map((name) => (
-                <MenuItem key={name} value={name}>
-                  {name}
+              {users?.map((user) => (
+                <MenuItem key={user?._id} value={user?._id}>
+                  {user?.username}
                 </MenuItem>
               ))}
             </Select>

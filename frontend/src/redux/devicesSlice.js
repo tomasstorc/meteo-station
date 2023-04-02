@@ -4,6 +4,7 @@ const initialState = {
   allDevices: [],
   setEditId: null,
   editDevice: {},
+  users: [],
   loading: false,
   errorMsg: undefined,
 };
@@ -75,6 +76,18 @@ export const deleteDevice = createAsyncThunk(
   }
 );
 
+export const getUsers = createAsyncThunk("devices/getUsers", async (token) => {
+  const res = await fetch("/api/user", {
+    method: "GET",
+    headers: {
+      authorization: `Bearer ${token}`,
+    },
+  })
+    .then((data) => data.json())
+    .catch((err) => err);
+  return res;
+});
+
 export const devicesSlice = createSlice({
   name: "devices",
   initialState,
@@ -124,6 +137,17 @@ export const devicesSlice = createSlice({
     },
     [deleteDevice.fulfilled]: (state) => {
       state.loading = false;
+    },
+    [getUsers.rejected]: (state) => {
+      state.loading = false;
+      state.error = true;
+    },
+    [getUsers.pending]: (state) => {
+      state.loading = true;
+    },
+    [getUsers.fulfilled]: (state, action) => {
+      state.loading = false;
+      state.users = action.payload.data;
     },
   },
 });
