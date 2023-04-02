@@ -9,7 +9,7 @@ const isOwnerOrUser = (req, res, next) => {
     Device_1.default.find({
         $and: [
             { _id: req.params.id },
-            { $or: [{ owner: req.user.id }, { users: req.user.id }] },
+            { $or: [{ owner: req.user.username }, { users: req.user.username }] },
         ],
     }, (err, foundDevice) => {
         if (err)

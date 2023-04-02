@@ -65,7 +65,6 @@ export default function EditForm({ open, onClose, deviceData, users }) {
   return (
     <Modal open={open}>
       <Box sx={style}>
-
         {deviceData ? <h5>Edit device</h5> : <h5>Add device</h5>}
 
         <Box sx={{ display: "flex", flexDirection: "column" }}>
@@ -102,7 +101,7 @@ export default function EditForm({ open, onClose, deviceData, users }) {
               MenuProps={MenuProps}
             >
               {users?.map((user) => (
-                <MenuItem key={user?._id} value={user?._id}>
+                <MenuItem key={user?._id} value={user?.username}>
                   {user?.username}
                 </MenuItem>
               ))}
@@ -120,9 +119,12 @@ export default function EditForm({ open, onClose, deviceData, users }) {
                 },
                 token,
               };
-              dispatch(addDevice(payload));
+              dispatch(addDevice(payload))
+                .unwrap()
+                .then(() => {
+                  dispatch(getDevices(token));
+                });
               onClose(false);
-              dispatch(getDevices(token));
             }}
           >
             Add device
@@ -139,9 +141,12 @@ export default function EditForm({ open, onClose, deviceData, users }) {
                 id: deviceData.id,
                 token,
               };
-              dispatch(editDevice(payload));
+              dispatch(editDevice(payload))
+                .unwrap()
+                .then(() => {
+                  dispatch(getDevices(token));
+                });
               onClose(false);
-              dispatch(getDevices(token));
             }}
           >
             Submit

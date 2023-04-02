@@ -15,6 +15,7 @@ const DeviceManagementTable = ({ data, users }) => {
     name: "",
     members: [],
   });
+  console.log(data);
 
   const columns = [
     {
@@ -24,7 +25,7 @@ const DeviceManagementTable = ({ data, users }) => {
     },
     {
       name: "Members",
-      selector: (row) => row.users,
+      selector: (row) => row.users.join(", "),
       sortable: false,
     },
     {

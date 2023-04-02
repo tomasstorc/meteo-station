@@ -30,12 +30,11 @@ router.get(
           return res.status(200).json(new SuccessResponse("No data found"));
 
         console.log(req.query.granularity);
-
-        const finalData = processData(foundData, req.query.granularity || 5);
+        const granularity = req.query?.granularity ? +req.query.granularity : 5;
+        const finalData = processData(foundData, granularity);
         return res
           .status(200)
           .json(new SuccessResponse("ok", { data: foundData }));
-
       }
     );
   }
