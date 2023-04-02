@@ -54,4 +54,4 @@ jobs:
 
       - name: "restart app"
         run: |
-          az webapp restart -n subjectman -g subjectman-rg
+          az webapp restart -n meteo-station -g meteo-rg
