@@ -24,6 +24,11 @@ const DeviceManagementTable = ({ data, users }) => {
       sortable: true,
     },
     {
+      name: "Owner",
+      selector: (row) => row.owner,
+      sortable: false,
+    },
+    {
       name: "Members",
       selector: (row) => row.users.join(", "),
       sortable: false,

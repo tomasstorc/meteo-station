@@ -58,7 +58,7 @@ export default function EditForm({ open, onClose, deviceData, users }) {
   useEffect(() => {
     setData({
       deviceName: deviceData?.name,
-      members: deviceData?.users,
+      users: deviceData?.users,
     });
   }, [deviceData]);
 
