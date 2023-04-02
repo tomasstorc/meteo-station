@@ -48,6 +48,10 @@ router.post("/login", (req, res) => {
         }
     });
 });
+router.get("/logout", (req, res) => {
+    res.clearCookie("token");
+    return res.redirect("/");
+});
 router.get("/refresh", isAuthenticated_1.default, (req, res) => {
     var _a, _b;
     res.clearCookie("token");

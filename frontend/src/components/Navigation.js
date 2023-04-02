@@ -28,7 +28,7 @@ function Navigation() {
             <DashboardIcon />
           </ListItemIcon>
           <Link href="/" underline="none" color="inherit">
-            <ListItemText>Dashboard</ListItemText>
+            <ListItemText>All devices</ListItemText>
           </Link>
         </MenuItem>
         <MenuItem>

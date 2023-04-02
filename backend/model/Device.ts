@@ -12,7 +12,7 @@ const deviceSchema = new mongoose.Schema<IDevice>({
   },
   users: [
     {
-      type: mongoose.Schema.Types.ObjectId,
+      type: String,
       ref: "User",
     },
   ],

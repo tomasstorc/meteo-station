@@ -65,7 +65,8 @@ export default function EditForm({ open, onClose, deviceData, users }) {
   return (
     <Modal open={open}>
       <Box sx={style}>
-        <h5>Edit device</h5>
+
+        {deviceData ? <h5>Edit device</h5> : <h5>Add device</h5>}
 
         <Box sx={{ display: "flex", flexDirection: "column" }}>
           <TextField
