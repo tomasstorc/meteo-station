@@ -43,7 +43,7 @@ jobs:
         run: docker build . -t ${{ env.DOCKER_IMAGE }}
 
       - name: "docker push"
-        run: docker push tomasstorc/subjectman:latest
+        run: docker push ${{ env.DOCKER_IMAGE }}
 
       - name: "Az CLI login"
         uses: azure/login@v1
