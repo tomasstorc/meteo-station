@@ -7,7 +7,7 @@ const deviceSchema = new mongoose.Schema<IDevice>({
     required: [true, "device name is required"],
   },
   owner: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: String,
     ref: "User",
   },
   users: [

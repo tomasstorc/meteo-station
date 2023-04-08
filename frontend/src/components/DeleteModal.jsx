@@ -43,9 +43,12 @@ export default function DeleteModal({ open, onClose, deviceData }) {
                 id: deviceData.id,
                 token,
               };
-              dispatch(deleteDevice(payload));
-              onClose(false);
-              dispatch(getDevices(token));
+              dispatch(deleteDevice(payload))
+                .unwrap()
+                .then(() => {
+                  onClose(false);
+                  dispatch(getDevices(token));
+                });
             }}
             variant="contained"
             color="error"

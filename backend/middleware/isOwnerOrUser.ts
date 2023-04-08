@@ -13,7 +13,7 @@ const isOwnerOrUser: RequestHandler = (
     {
       $and: [
         { _id: req.params.id },
-        { $or: [{ owner: req.user.id }, { users: req.user.id }] },
+        { $or: [{ owner: req.user.username }, { users: req.user.username }] },
       ],
     },
     (err: CallbackError | undefined, foundDevice: IDevice) => {
