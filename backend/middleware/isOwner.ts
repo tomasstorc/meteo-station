@@ -11,7 +11,7 @@ const isOwner: RequestHandler = (
 ) => {
   Device.find(
     {
-      $and: [{ _id: req.params.id }, { owner: req.user. }],
+      $and: [{ _id: req.params.id }, { owner: req.user.username }],
     },
     (err: CallbackError | undefined, foundDevice: IDevice) => {
       if (err) return res.status(400).json(new ErrorResponse(err));
