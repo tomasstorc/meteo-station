@@ -25,8 +25,10 @@ jobs:
           npm install
           npm run build
         if: ${{ github.event.inputs.ignore_warnings == false }}
+        name: "run test, do not skip warnings"
       - run: |
           cd frontend
           npm install
           npm run build  --ignore-warnings
         if: ${{ github.event.inputs.ignore_warnings == true }}
+        name: "run test, skip warnings"
