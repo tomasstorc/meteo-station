@@ -6,6 +6,12 @@ on:
       - synchronize
       - reopened
   workflow_dispatch:
+    inputs:
+      ignore_warnings:
+        description: "ignore warnings"
+        required: true
+        type: boolean
+        default: false
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -18,3 +24,9 @@ jobs:
           cd frontend
           npm install
           npm run build
+        if: ${{ github.event.inputs.ignore_warnings == 'false' }}
+      - run: |
+          cd frontend
+          npm install
+          npm run build  --ignore-warnings
+        if: ${{ github.event.inputs.ignore_warnings == 'true' }}
