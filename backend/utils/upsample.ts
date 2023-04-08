@@ -21,7 +21,7 @@ export default function linearInterpolation(
       const interpolatedTimestamp = +data[i].date + j * interval;
 
       interpolatedData.push({
-        timestamp: new Date(interpolatedTimestamp).toLocaleString(),
+        date: new Date(interpolatedTimestamp).toLocaleString(),
         temperature: interpolatedTemperature,
         humidity: interpolatedHumidity,
       });

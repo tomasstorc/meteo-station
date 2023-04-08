@@ -13,7 +13,7 @@ function linearInterpolation(data, interval) {
             const interpolatedHumidity = data[i].humidity * (1 - weight) + data[i + 1].humidity * weight;
             const interpolatedTimestamp = +data[i].date + j * interval;
             interpolatedData.push({
-                timestamp: new Date(interpolatedTimestamp).toLocaleString(),
+                date: new Date(interpolatedTimestamp).toLocaleString(),
                 temperature: interpolatedTemperature,
                 humidity: interpolatedHumidity,
             });

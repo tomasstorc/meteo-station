@@ -16,7 +16,7 @@ export default function averaging(data: Array<IData>, interval: number) {
       downsampledData.push({
         // convert timestamp to normal date
 
-        timestamp: new Date(currentTimestamp).toLocaleString(),
+        date: new Date(currentTimestamp).toLocaleString(),
         temperature: sumTemperature / count,
         humidity: sumHumidity / count,
       });
@@ -29,7 +29,7 @@ export default function averaging(data: Array<IData>, interval: number) {
   }
 
   downsampledData.push({
-    timestamp: new Date(currentTimestamp).toLocaleString(),
+    date: new Date(currentTimestamp).toLocaleString(),
     temperature: sumTemperature / count,
     humidity: sumHumidity / count,
   });
