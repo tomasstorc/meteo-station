@@ -21,14 +21,16 @@ jobs:
         with:
           node-version: 14
       - run: |
+          export CI=true
           cd frontend
           npm install
           npm run build
         if: ${{ github.event.inputs.ignore_warnings == false }}
         name: "run test, do not skip warnings"
       - run: |
+          export CI=false
           cd frontend
           npm install
-          npm run build  --ignore-warnings
+          npm run build
         if: ${{ github.event.inputs.ignore_warnings == true }}
         name: "run test, skip warnings"
