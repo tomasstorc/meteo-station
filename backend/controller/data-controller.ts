@@ -34,15 +34,18 @@ router.get(
 
         console.log(req.query.granularity);
 
+
         const finalData = processData(
           foundData,
           req.query.granularity ? +req.query.granularity : 5
         );
+
         return res.status(200).json(
           new SuccessResponse("ok", {
             data: finalData,
           })
         );
+
       }
     );
   }

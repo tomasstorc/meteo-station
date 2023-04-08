@@ -13,8 +13,12 @@ import {
   Paper,
   Link,
 } from "@mui/material";
+import { getLogout } from "../redux/loginSlice";
+import { useDispatch } from "react-redux";
 
 function Navigation() {
+  const dispatch = useDispatch();
+
   return (
     <Paper sx={{ width: 250, maxWidth: "100%", height: "100vh" }}>
       <div className="d-flex justify-content-center my-2">
@@ -44,7 +48,15 @@ function Navigation() {
           <ListItemIcon>
             <LogoutIcon />
           </ListItemIcon>
-          <ListItemText>Logout</ListItemText>
+          <Link underline="none" href={"/login"} color="inherit">
+            <ListItemText
+              onClick={() => {
+                dispatch(getLogout());
+              }}
+            >
+              Logout
+            </ListItemText>
+          </Link>
         </MenuItem>
       </MenuList>
     </Paper>

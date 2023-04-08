@@ -10,7 +10,7 @@ const deviceSchema = new mongoose_1.default.Schema({
         required: [true, "device name is required"],
     },
     owner: {
-        type: mongoose_1.default.Schema.Types.ObjectId,
+        type: String,
         ref: "User",
     },
     users: [

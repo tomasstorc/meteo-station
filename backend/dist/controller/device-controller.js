@@ -15,9 +15,7 @@ const isOwner_1 = __importDefault(require("../middleware/isOwner"));
 const router = express_1.default.Router();
 router.get("/", isAuthenticated_1.default, isOwnerOrUser_1.default, (req, res) => {
     Device_1.default.find()
-        .or([{ owner: req.user.id }, { users: req.user.id }])
-        .populate("owner", "username")
-        .populate("users", "username")
+        .or([{ owner: req.user.username }, { users: req.user.username }])
         .exec((err, foundDevices) => {
         if (err)
             return res.status(400).json(new error_response_1.default(err));
@@ -42,7 +40,7 @@ router.get("/:id", isAuthenticated_1.default, isOwnerOrUser_1.default, (req, res
 router.post("/", isAuthenticated_1.default, (req, res) => {
     const newDevice = new Device_1.default({
         name: req.body.name,
-        owner: req.user.id,
+        owner: req.user.username,
     });
     newDevice.save((err, savedDevice) => {
         if (err)
