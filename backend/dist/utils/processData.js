@@ -7,12 +7,17 @@ const upsample_1 = __importDefault(require("./upsample"));
 const downSample_1 = __importDefault(require("./downSample"));
 function processData(rawData, granularity) {
     const interval = granularity * 60 * 1000; // Převod na milisekundy
-    const timeDifference = rawData[rawData.length - 1].timestamp - rawData[0].timestamp;
-    const numberOfIntervals = Math.floor(timeDifference / interval);
-    // upsample or downsample
-    if (numberOfIntervals > rawData.length) {
-        return (0, upsample_1.default)(rawData, numberOfIntervals);
+    const timeDifference = rawData[rawData.length - 1].date - rawData[0].date;
+    if (interval > timeDifference / rawData.length) {
+        // Upsampling
+        return (0, upsample_1.default)(rawData, interval);
     }
-    return (0, downSample_1.default)(rawData, numberOfIntervals);
+    else if (interval > timeDifference / rawData.length) {
+        // Downsampling
+        return (0, downSample_1.default)(rawData, interval);
+    }
+    else {
+        return rawData;
+    }
 }
 exports.default = processData;

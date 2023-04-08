@@ -8,6 +8,7 @@ import { CallbackError, Document } from "mongoose";
 import ErrorResponse from "../response/error-response";
 import isOwnerOrUser from "../middleware/isOwnerOrUser";
 import processData from "../utils/processData";
+import convertToLocaleString from "../utils/covertToLocaleString";
 
 const router = express.Router();
 
@@ -19,8 +20,8 @@ router.get(
     Data.find(
       {
         deviceid: req.params.id,
-        timestamp: {
-          $lte: req.query.dateTo ? req.query.dateFrom : Date.now(),
+        date: {
+          $lte: req.query.dateTo ? req.query.dateFrom : new Date(),
           $gte: req.query.dateFrom
             ? req.query.dateFrom
             : new Date(Date.now() - 1000 * (60 * 60)),
@@ -39,9 +40,12 @@ router.get(
           req.query.granularity ? +req.query.granularity : 5
         );
 
-        return res
-          .status(200)
-          .json(new SuccessResponse("ok", { data: foundData }));
+        return res.status(200).json(
+          new SuccessResponse("ok", {
+            data: finalData,
+          })
+        );
+
       }
     );
   }
@@ -52,7 +56,7 @@ router.post("/", isDeviceAuthenticated, (req: Request, res: Response) => {
     deviceid: req.body.deviceid,
     temperature: req.body.temperature,
     humidity: req.body.humidity,
-    timestamp: Date.now(),
+    date: new Date(),
   });
   newData.save((err: CallbackError | undefined, savedData: IData) => {
     if (err) return res.status(400).json(new ErrorResponse(err));
