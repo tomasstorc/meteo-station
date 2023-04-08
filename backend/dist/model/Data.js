@@ -17,8 +17,8 @@ const dataSchema = new mongoose_1.default.Schema({
         type: Number,
         required: [true, "humidity is required"],
     },
-    timestamp: {
-        type: Number,
+    date: {
+        type: Date,
     },
 }, {
     timeseries: {

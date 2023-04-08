@@ -15,8 +15,8 @@ const dataSchema = new mongoose.Schema<IData>(
       type: Number,
       required: [true, "humidity is required"],
     },
-    timestamp: {
-      type: Number,
+    date: {
+      type: Date,
     },
   },
   {

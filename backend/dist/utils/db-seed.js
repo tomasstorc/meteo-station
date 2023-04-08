@@ -9,7 +9,7 @@ function dbSeed() {
     for (let i = 0; i < 10; i++) {
         let data = new Data_1.default({
             deviceid: "63f8a7e595e3bfcac43e1bc6",
-            timestamp: new Date(Date.now() - 300000 * i).getTime(),
+            date: new Date(Date.now() - 300000 * i),
             temperature: 25 - i,
             humidity: 24 - i,
         });

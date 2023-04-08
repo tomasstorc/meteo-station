@@ -15,8 +15,8 @@ const router = express_1.default.Router();
 router.get("/:id", isAuthenticated_1.default, isOwnerOrUser_1.default, (req, res) => {
     Data_1.default.find({
         deviceid: req.params.id,
-        timestamp: {
-            $lte: req.query.dateTo ? req.query.dateFrom : Date.now(),
+        date: {
+            $lte: req.query.dateTo ? req.query.dateFrom : new Date(),
             $gte: req.query.dateFrom
                 ? req.query.dateFrom
                 : new Date(Date.now() - 1000 * (60 * 60)),
@@ -28,9 +28,9 @@ router.get("/:id", isAuthenticated_1.default, isOwnerOrUser_1.default, (req, res
             return res.status(200).json(new success_response_1.default("No data found"));
         console.log(req.query.granularity);
         const finalData = (0, processData_1.default)(foundData, req.query.granularity ? +req.query.granularity : 5);
-        return res
-            .status(200)
-            .json(new success_response_1.default("ok", { data: foundData }));
+        return res.status(200).json(new success_response_1.default("ok", {
+            data: finalData,
+        }));
     });
 });
 router.post("/", isDeviceAuth_1.default, (req, res) => {
@@ -38,7 +38,7 @@ router.post("/", isDeviceAuth_1.default, (req, res) => {
         deviceid: req.body.deviceid,
         temperature: req.body.temperature,
         humidity: req.body.humidity,
-        timestamp: Date.now(),
+        date: new Date(),
     });
     newData.save((err, savedData) => {
         if (err)
