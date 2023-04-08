@@ -4,6 +4,7 @@ import averaging from "./downSample";
 
 export default function processData(rawData: Array<any>, granularity: number) {
   const interval = granularity * 60 * 1000; // Převod na milisekundy
+
   const timeDifference =
     rawData[rawData.length - 1].timestamp - rawData[0].timestamp;
 

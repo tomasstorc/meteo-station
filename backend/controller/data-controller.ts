@@ -31,7 +31,7 @@ router.get(
 
         console.log(req.query.granularity);
         const granularity = req.query?.granularity ? +req.query.granularity : 5;
-        const finalData = processData(foundData, granularity);
+        const finalData = processData(foundData, 1);
         return res
           .status(200)
           .json(new SuccessResponse("ok", { data: foundData }));

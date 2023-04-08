@@ -27,7 +27,7 @@ router.get("/:id", isAuthenticated_1.default, isOwnerOrUser_1.default, (req, res
             return res.status(200).json(new success_response_1.default("No data found"));
         console.log(req.query.granularity);
         const granularity = ((_a = req.query) === null || _a === void 0 ? void 0 : _a.granularity) ? +req.query.granularity : 5;
-        const finalData = (0, processData_1.default)(foundData, granularity);
+        const finalData = (0, processData_1.default)(foundData, 1);
         return res
             .status(200)
             .json(new success_response_1.default("ok", { data: foundData }));
