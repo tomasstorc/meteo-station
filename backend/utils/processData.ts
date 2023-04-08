@@ -8,13 +8,10 @@ export default function processData(rawData: Array<any>, granularity: number) {
   const timeDifference =
     rawData[rawData.length - 1].timestamp - rawData[0].timestamp;
 
-  if (interval > timeDifference / rawData.length) {
-    // Upsampling
-    return linearInterpolation(rawData, interval);
-  } else if (interval > timeDifference / rawData.length) {
-    // Downsampling
-    return averaging(rawData, interval);
-  } else {
-    return rawData;
+  const numberOfIntervals = Math.floor(timeDifference / interval);
+  // upsample or downsample
+  if (numberOfIntervals > rawData.length) {
+    return linearInterpolation(rawData, numberOfIntervals);
   }
+  return averaging(rawData, numberOfIntervals);
 }

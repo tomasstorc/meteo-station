@@ -1,6 +1,7 @@
 import express, { Express, Request, Response } from "express";
 import cors from "cors";
 import dotenv from "dotenv";
+import path from "path";
 
 import dbConnect from "./utils/db-connect";
 import morganMiddleware from "./middleware/morgan";
@@ -21,6 +22,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors());
 app.use(morganMiddleware);
+app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/api/user", userController);
 app.use("/api/data", dataController);

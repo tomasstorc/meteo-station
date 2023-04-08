@@ -20,8 +20,10 @@ router.get(
       {
         deviceid: req.params.id,
         timestamp: {
-          $lte: Date.now(),
-          $gte: new Date(Date.now() - 1000 * (60 * 5)),
+          $lte: req.query.dateTo ? req.query.dateFrom : Date.now(),
+          $gte: req.query.dateFrom
+            ? req.query.dateFrom
+            : new Date(Date.now() - 1000 * (60 * 60)),
         },
       },
       (err: CallbackError | undefined, foundData: Array<Document<IData>>) => {
@@ -30,8 +32,13 @@ router.get(
           return res.status(200).json(new SuccessResponse("No data found"));
 
         console.log(req.query.granularity);
-        const granularity = req.query?.granularity ? +req.query.granularity : 5;
-        const finalData = processData(foundData, 1);
+
+
+        const finalData = processData(
+          foundData,
+          req.query.granularity ? +req.query.granularity : 5
+        );
+
         return res
           .status(200)
           .json(new SuccessResponse("ok", { data: foundData }));
