@@ -24,9 +24,9 @@ jobs:
           cd frontend
           npm install
           npm run build
-        if: ${{ github.event.inputs.ignore_warnings == 'false' }}
+        if: ${{ github.event.inputs.ignore_warnings == false }}
       - run: |
           cd frontend
           npm install
           npm run build  --ignore-warnings
-        if: ${{ github.event.inputs.ignore_warnings == 'true' }}
+        if: ${{ github.event.inputs.ignore_warnings == true }}
