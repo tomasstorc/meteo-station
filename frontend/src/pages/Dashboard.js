@@ -1,20 +1,23 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { getData } from "../redux/dataSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { parseToken } from "../redux/loginSlice";
 import { useParams } from "react-router-dom";
-import {
-  XAxis,
-  YAxis,
-  AreaChart,
-  CartesianGrid,
-  Tooltip,
-  Area,
-  LineChart,
-  Legend,
-  Line,
-} from "recharts";
+import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+
 import Navigation from "../components/Navigation";
+import {
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  Typography,
+} from "@mui/material";
+import { Container } from "@mui/system";
+import GraphComponent from "../components/GraphComponent";
+import { MobileDateTimePicker } from "@mui/x-date-pickers";
 
 const Dashboard = () => {
   const dispatch = useDispatch();
@@ -30,91 +33,68 @@ const Dashboard = () => {
     dispatch(getData(payload));
   }, [dispatch, token, id]);
   console.log(data);
+  const [dataGranularity, setDataGranularity] = useState("");
 
+  const handleChange = (event) => {
+    setDataGranularity(event.target.value);
+  };
   return (
     <div className="row">
-      {/* Dashboard Teplota
-      <AreaChart
-        width={730}
-        height={250}
-        data={data}
-        margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
-      >
-        <defs>
-          <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="5%" stopColor="#FFA503" stopOpacity={0.8} />
-            <stop offset="95%" stopColor="#FFA503" stopOpacity={0} />
-          </linearGradient>
-        </defs>
-        <XAxis dataKey="timestamp" />
-        <YAxis />
-        <CartesianGrid strokeDasharray="3 3" />
-        <Tooltip />
-        <Area
-          type="monotone"
-          dataKey="temperature"
-          stroke="#FFA503"
-          fillOpacity={1}
-          fill="url(#colorUv)"
-        />
-      </AreaChart>
-      Vlhkost
-      <AreaChart
-        width={730}
-        height={250}
-        data={data}
-        margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
-      >
-        <defs>
-          <linearGradient id="colorPv" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="5%" stopColor="#145FF4" stopOpacity={0.8} />
-            <stop offset="95%" stopColor="#145FF4" stopOpacity={0} />
-          </linearGradient>
-        </defs>
-        <XAxis dataKey="timestamp" />
-        <YAxis />
-        <CartesianGrid strokeDasharray="3 3" />
-        <Tooltip />
-
-        <Area
-          type="monotone"
-          dataKey="humidity"
-          stroke="#82ca9d"
-          fillOpacity={1}
-          fill="url(#colorPv)"
-        />
-      </AreaChart> */}
       <Navigation className="col" />
-      <div className="col">
-        Dashboard
-        <LineChart
-          width={730}
-          height={250}
+      <Container className="col mt-3">
+        <Typography variant="h4"> Dashboard</Typography>
+        <div className="row">
+          <div className="col">
+            <FormControl sx={{ minWidth: 200 }}>
+              <InputLabel id="data-granularity">Data granularity</InputLabel>
+              <Select
+                onChange={handleChange}
+                id="data-granularity"
+                value={dataGranularity}
+                label="Data granularity"
+              >
+                <MenuItem value={10}>Ten</MenuItem>
+                <MenuItem value={20}>Twenty</MenuItem>
+                <MenuItem value={30}>Thirty</MenuItem>
+              </Select>
+            </FormControl>
+          </div>
+          <div className="d-flex justify-content-end col">
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DemoContainer
+                components={["MobileDateTimePicker", "MobileDateTimePicker"]}
+              >
+                <MobileDateTimePicker
+                  label={`Date and time from`}
+                  openTo="year"
+                />
+              </DemoContainer>
+            </LocalizationProvider>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DemoContainer
+                components={["MobileDateTimePicker", "MobileDateTimePicker"]}
+              >
+                <MobileDateTimePicker
+                  label={`Date and time to`}
+                  openTo="year"
+                />
+              </DemoContainer>
+            </LocalizationProvider>
+          </div>
+        </div>
+        <GraphComponent
+          name={"Temperature"}
+          color={"#FFA503"}
           data={data}
-          margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-        >
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="timestamp" />
-          <YAxis dataKey="temperature" />
-          <Tooltip />
-          <Legend />
-
-          <Line type="monotone" dataKey="temperature" stroke="#FE6102" />
-        </LineChart>
-        <LineChart
-          width={730}
-          height={250}
+          type="temperature"
+        />
+        <GraphComponent
+          name={"Humidity"}
+          color={"#145FF4"}
           data={data}
-          margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-        >
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="timestamp" />
-          <YAxis dataKey="humidity" />
-          <Tooltip />
-          <Legend />
-          <Line type="monotone" dataKey="humidity" stroke="#145FF4" />
-        </LineChart>
-      </div>
+          type="humidity"
+        />
+      </Container>
     </div>
   );
 };

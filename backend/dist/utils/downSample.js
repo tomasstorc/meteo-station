@@ -15,7 +15,7 @@ function averaging(data, interval) {
         else {
             downsampledData.push({
                 // convert timestamp to normal date
-                timestamp: new Date(currentTimestamp).toLocaleString(),
+                date: new Date(currentTimestamp).toLocaleString(),
                 temperature: sumTemperature / count,
                 humidity: sumHumidity / count,
             });
@@ -26,7 +26,7 @@ function averaging(data, interval) {
         }
     }
     downsampledData.push({
-        timestamp: new Date(currentTimestamp).toLocaleString(),
+        date: new Date(currentTimestamp).toLocaleString(),
         temperature: sumTemperature / count,
         humidity: sumHumidity / count,
     });
