@@ -1,4 +1,13 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -11,27 +20,29 @@ const isDeviceAuth_1 = __importDefault(require("../middleware/isDeviceAuth"));
 const error_response_1 = __importDefault(require("../response/error-response"));
 const isOwnerOrUser_1 = __importDefault(require("../middleware/isOwnerOrUser"));
 const processData_1 = __importDefault(require("../utils/processData"));
+const covertToLocaleString_1 = __importDefault(require("../utils/covertToLocaleString"));
 const router = express_1.default.Router();
 router.get("/:id", isAuthenticated_1.default, isOwnerOrUser_1.default, (req, res) => {
     Data_1.default.find({
         deviceid: req.params.id,
         date: {
-            $lte: req.query.dateTo ? req.query.dateFrom : new Date(),
+            $lte: req.query.dateTo ? req.query.dateTo : new Date(),
             $gte: req.query.dateFrom
                 ? req.query.dateFrom
                 : new Date(Date.now() - 1000 * (60 * 60)),
         },
-    }, (err, foundData) => {
+    }, (err, foundData) => __awaiter(void 0, void 0, void 0, function* () {
         if (err)
             return res.status(400).json(new error_response_1.default(err));
         if (!foundData)
             return res.status(200).json(new success_response_1.default("No data found"));
         console.log(req.query.granularity);
-        const finalData = (0, processData_1.default)(foundData, req.query.granularity ? +req.query.granularity : 5);
+        let finalData = (0, processData_1.default)(foundData, req.query.granularity ? +req.query.granularity : 5);
+        let test = (0, covertToLocaleString_1.default)(finalData, foundData[0].deviceid);
         return res.status(200).json(new success_response_1.default("ok", {
-            data: finalData,
+            data: test,
         }));
-    });
+    }));
 });
 router.post("/", isDeviceAuth_1.default, (req, res) => {
     let newData = new Data_1.default({

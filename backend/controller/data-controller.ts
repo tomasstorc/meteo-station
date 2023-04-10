@@ -21,31 +21,33 @@ router.get(
       {
         deviceid: req.params.id,
         date: {
-          $lte: req.query.dateTo ? req.query.dateFrom : new Date(),
+          $lte: req.query.dateTo ? req.query.dateTo : new Date(),
           $gte: req.query.dateFrom
             ? req.query.dateFrom
             : new Date(Date.now() - 1000 * (60 * 60)),
         },
       },
-      (err: CallbackError | undefined, foundData: Array<Document<IData>>) => {
+      async (
+        err: CallbackError | undefined,
+        foundData: Array<Document<IData>>
+      ) => {
         if (err) return res.status(400).json(new ErrorResponse(err));
         if (!foundData)
           return res.status(200).json(new SuccessResponse("No data found"));
 
         console.log(req.query.granularity);
 
-
-        const finalData = processData(
+        let finalData = processData(
           foundData,
           req.query.granularity ? +req.query.granularity : 5
         );
+        let test = convertToLocaleString(finalData, foundData[0].deviceid]);
 
         return res.status(200).json(
           new SuccessResponse("ok", {
-            data: finalData,
+            data: test,
           })
         );
-
       }
     );
   }
