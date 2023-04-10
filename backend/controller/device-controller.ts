@@ -19,8 +19,9 @@ router.get(
   isOwnerOrUser,
   (req: Request, res: Response) => {
     Device.find()
-      .or([{ owner: req.user.username }, { users: req.user.username }])
-
+      .or([{ owner: req.user.id }, { users: req.user.id }])
+      .populate("owner", "username")
+      .populate("users", "username")
       .exec((err: CallbackError | undefined, foundDevices: Array<IDevice>) => {
         if (err) return res.status(400).json(new ErrorResponse(err));
         if (foundDevices.length === 0)
@@ -51,7 +52,7 @@ router.get(
 router.post("/", isAuthenticated, (req: Request, res: Response) => {
   const newDevice = new Device({
     name: req.body.name,
-    owner: req.user.username,
+    owner: req.user.id,
   });
   newDevice.save((err: CallbackError | undefined, savedDevice: any) => {
     if (err) return res.status(400).json(new ErrorResponse(err));
