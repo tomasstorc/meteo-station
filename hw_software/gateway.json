@@ -1,0 +1,599 @@
+[
+    {
+        "id": "9cc038cd8e0bff06",
+        "type": "tab",
+        "label": "NodeInput",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "463aa84fa9713baa",
+        "type": "tab",
+        "label": "DataProcessing",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "7c9bfcf79881fe54",
+        "type": "tab",
+        "label": "DataSending",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "8a5a3f3fa3c39a4b",
+        "type": "tab",
+        "label": "Cleaner",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "85a818509d3554aa",
+        "type": "tab",
+        "label": "CheckDashboard",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "dbeb53d7877d3d90",
+        "type": "serial-port",
+        "serialport": "/dev/ttyUSB0",
+        "serialbaud": "9600",
+        "databits": "8",
+        "parity": "none",
+        "stopbits": "1",
+        "waitfor": "{",
+        "dtr": "none",
+        "rts": "none",
+        "cts": "none",
+        "dsr": "none",
+        "newline": "\\n",
+        "bin": "false",
+        "out": "char",
+        "addchar": "",
+        "responsetimeout": "10000"
+    },
+    {
+        "id": "a050bcfd77d2a04a",
+        "type": "ui_tab",
+        "name": "Meteostation",
+        "icon": "dashboard",
+        "order": 3,
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "cfbfa545e7bb0c15",
+        "type": "ui_base",
+        "theme": {
+            "name": "theme-light",
+            "lightTheme": {
+                "default": "#0094CE",
+                "baseColor": "#0094CE",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "edited": true,
+                "reset": false
+            },
+            "darkTheme": {
+                "default": "#097479",
+                "baseColor": "#097479",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "edited": false
+            },
+            "customTheme": {
+                "name": "Untitled Theme 1",
+                "default": "#4B7930",
+                "baseColor": "#4B7930",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+            },
+            "themeState": {
+                "base-color": {
+                    "default": "#0094CE",
+                    "value": "#0094CE",
+                    "edited": false
+                },
+                "page-titlebar-backgroundColor": {
+                    "value": "#0094CE",
+                    "edited": false
+                },
+                "page-backgroundColor": {
+                    "value": "#fafafa",
+                    "edited": false
+                },
+                "page-sidebar-backgroundColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "group-textColor": {
+                    "value": "#1bbfff",
+                    "edited": false
+                },
+                "group-borderColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "group-backgroundColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "widget-textColor": {
+                    "value": "#111111",
+                    "edited": false
+                },
+                "widget-backgroundColor": {
+                    "value": "#0094ce",
+                    "edited": false
+                },
+                "widget-borderColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "base-font": {
+                    "value": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+                }
+            },
+            "angularTheme": {
+                "primary": "indigo",
+                "accents": "blue",
+                "warn": "red",
+                "background": "grey",
+                "palette": "light"
+            }
+        },
+        "site": {
+            "name": "Node-RED Dashboard",
+            "hideToolbar": "false",
+            "allowSwipe": "false",
+            "lockMenu": "false",
+            "allowTempTheme": "true",
+            "dateFormat": "DD/MM/YYYY",
+            "sizes": {
+                "sx": 48,
+                "sy": 48,
+                "gx": 6,
+                "gy": 6,
+                "cx": 6,
+                "cy": 6,
+                "px": 0,
+                "py": 0
+            }
+        }
+    },
+    {
+        "id": "9397c6614a537120",
+        "type": "ui_group",
+        "name": "Group 2",
+        "tab": "a050bcfd77d2a04a",
+        "order": 1,
+        "disp": true,
+        "width": 6
+    },
+    {
+        "id": "2999383859eb40b1",
+        "type": "sqlitedb",
+        "db": "/home/lumine220/meteostation.db",
+        "mode": "RW"
+    },
+    {
+        "id": "57603dc593de4500",
+        "type": "mqtt-broker",
+        "name": "Output",
+        "broker": "localhost",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "1d1e29486d2abb58",
+        "type": "serial in",
+        "z": "9cc038cd8e0bff06",
+        "name": "UNO",
+        "serial": "dbeb53d7877d3d90",
+        "x": 90,
+        "y": 140,
+        "wires": [
+            [
+                "7bf1f1810e68b0f8"
+            ]
+        ]
+    },
+    {
+        "id": "7bf1f1810e68b0f8",
+        "type": "function",
+        "z": "9cc038cd8e0bff06",
+        "name": "DHT data",
+        "func": "let message = msg.payload.replace(\"{\", \"\").replace(\"}\", \"\");\nlet data = message.split(\";\");\n\nlet output = {};\n\noutput.temp = Number(data[0]);\noutput.hum = Number(data[1]);\noutput.count = Number(data[2]);\noutput.machine = data[3].replace(\"\\\"\", \"\\'\");\n\n\n// temp|hum|count|machineName\nreturn output;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 260,
+        "y": 140,
+        "wires": [
+            [
+                "e6f2a27de28c92b5",
+                "018f04bb891dc0c9"
+            ]
+        ]
+    },
+    {
+        "id": "e6f2a27de28c92b5",
+        "type": "link out",
+        "z": "9cc038cd8e0bff06",
+        "name": "linkOutForCheck",
+        "mode": "link",
+        "links": [
+            "120262952f2a20e4"
+        ],
+        "x": 445,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "018f04bb891dc0c9",
+        "type": "function",
+        "z": "9cc038cd8e0bff06",
+        "name": "INSERT query",
+        "func": "// temp|hum|count|machine\nmsg.params = [msg.temp, msg.hum, msg.count, msg.machine];\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 500,
+        "y": 180,
+        "wires": [
+            [
+                "8aaf910c3458291a"
+            ]
+        ]
+    },
+    {
+        "id": "8aaf910c3458291a",
+        "type": "sqlite",
+        "z": "9cc038cd8e0bff06",
+        "mydb": "2999383859eb40b1",
+        "sqlquery": "prepared",
+        "sql": "INSERT INTO data_from_node (temperature, humidity, count, machine)\nVALUES (?, ?, ?, ?)",
+        "name": "INSERT",
+        "x": 680,
+        "y": 180,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "f851d7ab5de7a8d3",
+        "type": "inject",
+        "z": "463aa84fa9713baa",
+        "name": "Start every 5 minutes",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "300",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "3",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 140,
+        "y": 80,
+        "wires": [
+            [
+                "d072f2f1bc25ef40"
+            ]
+        ]
+    },
+    {
+        "id": "d072f2f1bc25ef40",
+        "type": "sqlite",
+        "z": "463aa84fa9713baa",
+        "mydb": "2999383859eb40b1",
+        "sqlquery": "fixed",
+        "sql": "SELECT * FROM data_from_node;",
+        "name": "SELECT node data",
+        "x": 390,
+        "y": 80,
+        "wires": [
+            [
+                "2faa3ba19c80a8b4"
+            ]
+        ]
+    },
+    {
+        "id": "2faa3ba19c80a8b4",
+        "type": "switch",
+        "z": "463aa84fa9713baa",
+        "name": "Check if data",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "nempty"
+            }
+        ],
+        "checkall": "false",
+        "repair": false,
+        "outputs": 1,
+        "x": 170,
+        "y": 220,
+        "wires": [
+            [
+                "a13b250096f8dee1"
+            ]
+        ]
+    },
+    {
+        "id": "a13b250096f8dee1",
+        "type": "function",
+        "z": "463aa84fa9713baa",
+        "name": "caltulate avg",
+        "func": "let allData = msg.payload;\nlet temp;\nlet tSum = 0;\nlet hum;\nlet hSum = 0;\nlet count = 0;\nlet output = {};\n\nfor (let i = 0; i < allData.length; i++) {\n    let row = allData[i];\n    tSum += Number(row.temperature);\n    hSum += Number(row.humidity);\n    count++; \n}\n\n\noutput.temp = (tSum / count).toFixed(2);\noutput.hum = (hSum / count).toFixed(2);\n\n\nreturn output;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 370,
+        "y": 300,
+        "wires": [
+            [
+                "979000026bbff8b9"
+            ]
+        ]
+    },
+    {
+        "id": "979000026bbff8b9",
+        "type": "function",
+        "z": "463aa84fa9713baa",
+        "name": "INSERT query",
+        "func": "// temp|hum\nmsg.params = [msg.temp, msg.hum];\n\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 560,
+        "y": 300,
+        "wires": [
+            [
+                "c3c38f6bf54957b7"
+            ]
+        ]
+    },
+    {
+        "id": "c3c38f6bf54957b7",
+        "type": "sqlite",
+        "z": "463aa84fa9713baa",
+        "mydb": "2999383859eb40b1",
+        "sqlquery": "prepared",
+        "sql": "INSERT INTO data_for_call (temperature, humidity)\nVALUES (?, ?)",
+        "name": "INSERT",
+        "x": 740,
+        "y": 300,
+        "wires": [
+            [
+                "3d54864d73a9107a"
+            ]
+        ]
+    },
+    {
+        "id": "3d54864d73a9107a",
+        "type": "sqlite",
+        "z": "463aa84fa9713baa",
+        "mydb": "2999383859eb40b1",
+        "sqlquery": "fixed",
+        "sql": "DELETE FROM data_from_node;",
+        "name": "DELETE",
+        "x": 360,
+        "y": 420,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "b0f7ce7d0e111fd5",
+        "type": "link in",
+        "z": "7c9bfcf79881fe54",
+        "name": "linkInDbSaved",
+        "links": [
+            "0645d5f2b73df463"
+        ],
+        "x": 95,
+        "y": 100,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "b1b13d7e0aafc0a4",
+        "type": "inject",
+        "z": "8a5a3f3fa3c39a4b",
+        "name": "once a day",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "86400",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 90,
+        "y": 80,
+        "wires": [
+            [
+                "57eca05273bcbf2f"
+            ]
+        ]
+    },
+    {
+        "id": "57eca05273bcbf2f",
+        "type": "sqlite",
+        "z": "8a5a3f3fa3c39a4b",
+        "mydb": "2999383859eb40b1",
+        "sqlquery": "fixed",
+        "sql": "DELETE FROM data_for_call\nWHERE sendAway=1 AND timestamp>=datetime('now', '-1 day');",
+        "name": "DELETE sent data",
+        "x": 330,
+        "y": 80,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "120262952f2a20e4",
+        "type": "link in",
+        "z": "85a818509d3554aa",
+        "name": "linkInFromNode",
+        "links": [
+            "e6f2a27de28c92b5"
+        ],
+        "x": 165,
+        "y": 160,
+        "wires": [
+            [
+                "8f64468a1d063136"
+            ]
+        ]
+    },
+    {
+        "id": "8f64468a1d063136",
+        "type": "function",
+        "z": "85a818509d3554aa",
+        "name": "parseDataForCheck",
+        "func": "let output = msg;\n\nlet temp = {}\nlet hum = {}\nlet count = {}\n\ntemp.payload = output.temp\nhum.payload = output.hum\ncount.payload = output.count\n\nreturn [temp, hum, count];",
+        "outputs": 3,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 320,
+        "y": 160,
+        "wires": [
+            [
+                "35efe6e7e03d0bb8"
+            ],
+            [
+                "5c8004d068a919f6"
+            ],
+            [
+                "f91734e0ff966567"
+            ]
+        ]
+    },
+    {
+        "id": "35efe6e7e03d0bb8",
+        "type": "ui_gauge",
+        "z": "85a818509d3554aa",
+        "name": "Temperature",
+        "group": "9397c6614a537120",
+        "order": 1,
+        "width": 6,
+        "height": 4,
+        "gtype": "gage",
+        "title": "Temperature",
+        "label": "units",
+        "format": "{{value}}",
+        "min": "-40",
+        "max": "80",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 610,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "5c8004d068a919f6",
+        "type": "ui_gauge",
+        "z": "85a818509d3554aa",
+        "name": "Humidity",
+        "group": "9397c6614a537120",
+        "order": 2,
+        "width": 6,
+        "height": 4,
+        "gtype": "gage",
+        "title": "Humidity",
+        "label": "units",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "100",
+        "colors": [
+            "#0015b3",
+            "#da33e6",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 600,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "f91734e0ff966567",
+        "type": "ui_gauge",
+        "z": "85a818509d3554aa",
+        "name": "CountInCall",
+        "group": "9397c6614a537120",
+        "order": 3,
+        "width": 6,
+        "height": 4,
+        "gtype": "gage",
+        "title": "CountInCall",
+        "label": "units",
+        "format": "{{value}}",
+        "min": 0,
+        "max": 10,
+        "colors": [
+            "#d43008",
+            "#26e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 610,
+        "y": 220,
+        "wires": []
+    }
+]
