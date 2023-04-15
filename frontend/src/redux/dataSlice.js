@@ -7,12 +7,15 @@ const initialState = {
 };
 
 export const getData = createAsyncThunk("data/getData", async (data) => {
-  const res = await fetch(`/api/data/${data.id}`, {
-    method: "GET",
-    headers: {
-      authorization: `Bearer ${data.token}`,
-    },
-  })
+  const res = await fetch(
+    `/api/data/${data.id}?granularity=${data.granularity}&dateFrom=${data.dateFrom}&dateTo=${data.dateTo}`,
+    {
+      method: "GET",
+      headers: {
+        authorization: `Bearer ${data.token}`,
+      },
+    }
+  )
     .then((data) => data.json())
     .catch((err) => err);
   return res;

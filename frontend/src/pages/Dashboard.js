@@ -24,20 +24,32 @@ const Dashboard = () => {
   const { token } = useSelector((state) => state.login);
   const { data } = useSelector((state) => state.data);
   const { id } = useParams();
+
+  const [parameters, setParameters] = useState({
+    granularity: 5,
+    dateFrom: new Date(Date.now() - 1000 * (60 * 60)).toLocaleString(),
+    dateTo: new Date().toLocaleString(),
+  });
   useEffect(() => {
     dispatch(parseToken());
     let payload = {
       id: id,
       token: token,
+      granularity: parameters.granularity,
+      dateFrom: parameters.dateFrom,
+      dateTo: parameters.dateTo,
     };
     dispatch(getData(payload));
-  }, [dispatch, token, id]);
+  }, [
+    dispatch,
+    token,
+    id,
+    parameters.granularity,
+    parameters.dateFrom,
+    parameters.dateTo,
+  ]);
   console.log(data);
-  const [dataGranularity, setDataGranularity] = useState("");
 
-  const handleChange = (event) => {
-    setDataGranularity(event.target.value);
-  };
   return (
     <div className="row">
       <Navigation className="col" />
@@ -46,37 +58,66 @@ const Dashboard = () => {
         <div className="row">
           <div className="col">
             <FormControl sx={{ minWidth: 200 }}>
-              <InputLabel id="data-granularity">Data granularity</InputLabel>
+              <InputLabel id="granularity">Data granularity</InputLabel>
               <Select
-                onChange={handleChange}
-                id="data-granularity"
-                value={dataGranularity}
+                onChange={(e) => {
+                  setParameters({
+                    granularity: e.target.value,
+                    dateFrom: parameters.dateFrom,
+                    dateTo: parameters.dateTo,
+                  });
+                }}
+                id="granularity"
+                value={parameters.granularity}
+                name="granularity"
                 label="Data granularity"
               >
-                <MenuItem value={10}>Ten</MenuItem>
-                <MenuItem value={20}>Twenty</MenuItem>
-                <MenuItem value={30}>Thirty</MenuItem>
+                <MenuItem value={1}>1</MenuItem>
+                <MenuItem value={5}>5</MenuItem>
+                <MenuItem value={10}>10</MenuItem>
+                <MenuItem value={30}>30</MenuItem>
               </Select>
             </FormControl>
           </div>
           <div className="d-flex justify-content-end col">
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <LocalizationProvider
+              dateAdapter={AdapterDayjs}
+              onChange={(e) => {
+                setParameters({
+                  granularity: parameters.granularity,
+                  dateFrom: e.target.value,
+                  dateTo: parameters.dateTo,
+                });
+              }}
+            >
               <DemoContainer
                 components={["MobileDateTimePicker", "MobileDateTimePicker"]}
               >
                 <MobileDateTimePicker
                   label={`Date and time from`}
                   openTo="year"
+                  name="dateFrom"
                 />
               </DemoContainer>
             </LocalizationProvider>
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <LocalizationProvider
+              dateAdapter={AdapterDayjs}
+              onChange={(e) => {
+                setParameters({
+                  granularity: parameters.granularity,
+                  dateFrom: parameters.dateFrom,
+                  dateTo: e.target.value,
+                });
+              }}
+            >
               <DemoContainer
                 components={["MobileDateTimePicker", "MobileDateTimePicker"]}
               >
                 <MobileDateTimePicker
                   label={`Date and time to`}
                   openTo="year"
+                  name="dateTo"
+                  // value={parameters.dateTo}
                 />
               </DemoContainer>
             </LocalizationProvider>

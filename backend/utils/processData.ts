@@ -7,7 +7,6 @@ export default function processData(rawData: Array<any>, granularity: number) {
 
   const timeDifference = rawData[rawData.length - 1].date - rawData[0].date;
 
-
   if (interval > timeDifference / rawData.length) {
     // Upsampling
     return linearInterpolation(rawData, interval);

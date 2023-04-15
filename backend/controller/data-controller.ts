@@ -17,14 +17,13 @@ router.get(
   isAuthenticated,
   isOwnerOrUser,
   (req: Request, res: Response) => {
+    console.log(new Date(req.query.dateTo as string), req.query.dateFrom);
     Data.find(
       {
         deviceid: req.params.id,
         date: {
-          $lte: req.query.dateTo ? req.query.dateFrom : new Date(),
-          $gte: req.query.dateFrom
-            ? req.query.dateFrom
-            : new Date(Date.now() - 1000 * (60 * 60)),
+          $lte: new Date(req.query.dateTo as string),
+          $gte: new Date(req.query.dateFrom as string),
         },
       },
       (err: CallbackError | undefined, foundData: Array<Document<IData>>) => {
@@ -32,20 +31,17 @@ router.get(
         if (!foundData)
           return res.status(200).json(new SuccessResponse("No data found"));
 
-        console.log(req.query.granularity);
-
-
         const finalData = processData(
           foundData,
           req.query.granularity ? +req.query.granularity : 5
         );
+        let test = convertToLocaleString(finalData);
 
         return res.status(200).json(
           new SuccessResponse("ok", {
-            data: finalData,
+            data: test,
           })
         );
-
       }
     );
   }
