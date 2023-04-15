@@ -14,12 +14,16 @@ const processData_1 = __importDefault(require("../utils/processData"));
 const covertToLocaleString_1 = __importDefault(require("../utils/covertToLocaleString"));
 const router = express_1.default.Router();
 router.get("/:id", isAuthenticated_1.default, isOwnerOrUser_1.default, (req, res) => {
-    console.log(new Date(req.query.dateTo), req.query.dateFrom);
+    console.log(new Date(req.query.dateFrom), req.query.dateTo);
     Data_1.default.find({
         deviceid: req.params.id,
         date: {
-            $lte: new Date(req.query.dateTo),
-            $gte: new Date(req.query.dateFrom),
+            $lte: req.query.dateTo
+                ? new Date(req.query.dateTo)
+                : new Date(),
+            $gte: req.query.dateFrom
+                ? new Date(req.query.dateFrom)
+                : new Date(Date.now() - 1000 * (60 * 60)),
         },
     }, (err, foundData) => {
         if (err)

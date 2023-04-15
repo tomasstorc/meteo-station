@@ -18,6 +18,7 @@ import {
 import { Container } from "@mui/system";
 import GraphComponent from "../components/GraphComponent";
 import { MobileDateTimePicker } from "@mui/x-date-pickers";
+import dayjs from "dayjs";
 
 const Dashboard = () => {
   const dispatch = useDispatch();
@@ -27,8 +28,8 @@ const Dashboard = () => {
 
   const [parameters, setParameters] = useState({
     granularity: 5,
-    dateFrom: new Date(Date.now() - 1000 * (60 * 60)).toLocaleString(),
-    dateTo: new Date().toLocaleString(),
+    dateFrom: new Date(Date.now() - 1000 * (60 * 60)).toISOString(),
+    dateTo: new Date().toISOString(),
   });
   useEffect(() => {
     dispatch(parseToken());
@@ -80,16 +81,7 @@ const Dashboard = () => {
             </FormControl>
           </div>
           <div className="d-flex justify-content-end col">
-            <LocalizationProvider
-              dateAdapter={AdapterDayjs}
-              onChange={(e) => {
-                setParameters({
-                  granularity: parameters.granularity,
-                  dateFrom: e.target.value,
-                  dateTo: parameters.dateTo,
-                });
-              }}
-            >
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DemoContainer
                 components={["MobileDateTimePicker", "MobileDateTimePicker"]}
               >
@@ -97,19 +89,17 @@ const Dashboard = () => {
                   label={`Date and time from`}
                   openTo="year"
                   name="dateFrom"
+                  onChange={(e) => {
+                    setParameters({
+                      granularity: parameters.granularity,
+                      dateFrom: e.$d.toISOString(),
+                      dateTo: parameters.dateTo,
+                    });
+                  }}
                 />
               </DemoContainer>
             </LocalizationProvider>
-            <LocalizationProvider
-              dateAdapter={AdapterDayjs}
-              onChange={(e) => {
-                setParameters({
-                  granularity: parameters.granularity,
-                  dateFrom: parameters.dateFrom,
-                  dateTo: e.target.value,
-                });
-              }}
-            >
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DemoContainer
                 components={["MobileDateTimePicker", "MobileDateTimePicker"]}
               >
@@ -117,6 +107,13 @@ const Dashboard = () => {
                   label={`Date and time to`}
                   openTo="year"
                   name="dateTo"
+                  onChange={(e) => {
+                    setParameters({
+                      granularity: parameters.granularity,
+                      dateFrom: parameters.dateFrom,
+                      dateTo: e.$d.toISOString(),
+                    });
+                  }}
                   // value={parameters.dateTo}
                 />
               </DemoContainer>

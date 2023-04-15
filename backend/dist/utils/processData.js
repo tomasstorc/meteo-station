@@ -7,6 +7,9 @@ const upsample_1 = __importDefault(require("./upsample"));
 const downSample_1 = __importDefault(require("./downSample"));
 function processData(rawData, granularity) {
     const interval = granularity * 60 * 1000; // Převod na milisekundy
+    if (rawData.length === 0) {
+        return rawData;
+    }
     const timeDifference = rawData[rawData.length - 1].date - rawData[0].date;
     if (interval > timeDifference / rawData.length) {
         // Upsampling
