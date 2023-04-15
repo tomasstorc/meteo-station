@@ -17,13 +17,17 @@ router.get(
   isAuthenticated,
   isOwnerOrUser,
   (req: Request, res: Response) => {
-    console.log(new Date(req.query.dateTo as string), req.query.dateFrom);
+    console.log(new Date(req.query.dateFrom as string), req.query.dateTo);
     Data.find(
       {
         deviceid: req.params.id,
         date: {
-          $lte: new Date(req.query.dateTo as string),
-          $gte: new Date(req.query.dateFrom as string),
+          $lte: req.query.dateTo
+            ? new Date(req.query.dateTo as string)
+            : new Date(),
+          $gte: req.query.dateFrom
+            ? new Date(req.query.dateFrom as string)
+            : new Date(Date.now() - 1000 * (60 * 60)),
         },
       },
       (err: CallbackError | undefined, foundData: Array<Document<IData>>) => {
