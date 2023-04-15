@@ -11,25 +11,25 @@ const isDeviceAuth_1 = __importDefault(require("../middleware/isDeviceAuth"));
 const error_response_1 = __importDefault(require("../response/error-response"));
 const isOwnerOrUser_1 = __importDefault(require("../middleware/isOwnerOrUser"));
 const processData_1 = __importDefault(require("../utils/processData"));
+const covertToLocaleString_1 = __importDefault(require("../utils/covertToLocaleString"));
 const router = express_1.default.Router();
 router.get("/:id", isAuthenticated_1.default, isOwnerOrUser_1.default, (req, res) => {
+    console.log(new Date(req.query.dateTo), req.query.dateFrom);
     Data_1.default.find({
         deviceid: req.params.id,
         date: {
-            $lte: req.query.dateTo ? req.query.dateFrom : new Date(),
-            $gte: req.query.dateFrom
-                ? req.query.dateFrom
-                : new Date(Date.now() - 1000 * (60 * 60)),
+            $lte: new Date(req.query.dateTo),
+            $gte: new Date(req.query.dateFrom),
         },
     }, (err, foundData) => {
         if (err)
             return res.status(400).json(new error_response_1.default(err));
         if (!foundData)
             return res.status(200).json(new success_response_1.default("No data found"));
-        console.log(req.query.granularity);
         const finalData = (0, processData_1.default)(foundData, req.query.granularity ? +req.query.granularity : 5);
+        let test = (0, covertToLocaleString_1.default)(finalData);
         return res.status(200).json(new success_response_1.default("ok", {
-            data: finalData,
+            data: test,
         }));
     });
 });

@@ -9,7 +9,8 @@ export default function linearInterpolation(
 
   for (let i = 0; i < data.length - 1; i++) {
     interpolatedData.push(data[i]);
-    const timeDifference = +data[i + 1].date - +data[i].date;
+    const timeDifference =
+      +data[i + 1].date.getTime() - +data[i].date.getTime();
     const steps = timeDifference / interval;
 
     for (let j = 1; j < steps; j++) {

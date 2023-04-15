@@ -2,7 +2,7 @@ import IData from "../interface/Data";
 
 export default function averaging(data: Array<IData>, interval: number) {
   const downsampledData = [];
-  let currentTimestamp = +data[0].date;
+  let currentTimestamp = data[0].date.getTime();
   let sumTemperature = 0;
   let sumHumidity = 0;
   let count = 0;

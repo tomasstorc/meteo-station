@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 function averaging(data, interval) {
     const downsampledData = [];
-    let currentTimestamp = +data[0].date;
+    let currentTimestamp = data[0].date.getTime();
     let sumTemperature = 0;
     let sumHumidity = 0;
     let count = 0;
