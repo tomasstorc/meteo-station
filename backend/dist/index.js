@@ -23,12 +23,15 @@ app.use(express_1.default.urlencoded({ extended: true }));
 app.use(express_1.default.json());
 app.use((0, cors_1.default)());
 app.use(morgan_1.default);
-app.use(express_1.default.static(path_1.default.join(__dirname, "public")));
 app.use("/api/user", user_controller_1.default);
 app.use("/api/data", data_controller_1.default);
 app.use("/api/device", device_controller_1.default);
 app.use("/api/auth", auth_controller_1.default);
 app.use("/api/key", key_controller_1.default);
+app.use(express_1.default.static(path_1.default.join(__dirname, "public")));
+app.get("*", (req, res) => {
+    res.sendFile(path_1.default.join(__dirname + "/public/index.html"));
+});
 (0, db_connect_1.default)();
 if (process.env.NODE_ENV !== "production")
     (0, db_seed_1.default)();
