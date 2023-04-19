@@ -4,6 +4,6 @@ WORKDIR /app
 COPY backend/package*.json /app/
 RUN npm ci
 RUN tsc
-COPY ./dist /app/
+COPY ./dist .
 EXPOSE 8001
 CMD ["node", "index.js"]

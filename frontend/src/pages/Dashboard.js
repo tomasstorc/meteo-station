@@ -18,7 +18,6 @@ import {
 import { Container } from "@mui/system";
 import GraphComponent from "../components/GraphComponent";
 import { MobileDateTimePicker } from "@mui/x-date-pickers";
-import dayjs from "dayjs";
 
 const Dashboard = () => {
   const dispatch = useDispatch();
