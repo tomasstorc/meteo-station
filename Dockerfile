@@ -1,8 +1,9 @@
 FROM node:14 as build
 WORKDIR /app
 COPY backend/package*.json ./
+COPY backend/tsconfig.json ./
 RUN npm i
-RUN tsc
+RUN npm run tsc
 
 FROM node:14-alpine
 WORKDIR /app
