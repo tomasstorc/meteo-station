@@ -10,8 +10,8 @@ RUN tsc
 FROM node:14-alpine
 WORKDIR /app
 COPY --from=build /app/dist .
-COPY --from=build /app/dist/public ./public
 COPY --from=build /app/package*.json ./
+COPY backend/fe ./public
 RUN npm ci
 EXPOSE 8001
 CMD ["node", "index.js"]
