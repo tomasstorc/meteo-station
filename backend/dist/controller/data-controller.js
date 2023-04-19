@@ -38,18 +38,31 @@ router.get("/:id", isAuthenticated_1.default, isOwnerOrUser_1.default, (req, res
     });
 });
 router.post("/", isDeviceAuth_1.default, (req, res) => {
-    let newData = new Data_1.default({
-        deviceid: req.body.deviceid,
-        temperature: req.body.temperature,
-        humidity: req.body.humidity,
-        date: new Date(),
-    });
-    newData.save((err, savedData) => {
-        if (err)
-            return res.status(400).json(new error_response_1.default(err));
-        if (!savedData)
-            res.status(400).json(new error_response_1.default("data not saved"));
-        return res.sendStatus(201);
+    req.body.data.forEach((data) => {
+        const newData = new Data_1.default({
+            deviceid: data.deviceid,
+            temperature: data.temperature,
+            humidity: data.humidity,
+            date: data.date || new Date(),
+        });
+        newData.save((err, savedData) => {
+            if (err)
+                return res.status(400).json(new error_response_1.default(err));
+            if (!savedData)
+                res.status(400).json(new error_response_1.default("data not saved"));
+        });
+        return res.status(201).json(new success_response_1.default("ok"));
     });
 });
+//   let newData = new Data<IData>({
+//     deviceid: req.body.deviceid,
+//     temperature: req.body.temperature,
+//     humidity: req.body.humidity,
+//     date: new Date(),
+//   });
+//   newData.save((err: CallbackError | undefined, savedData: IData) => {
+//     if (err) return res.status(400).json(new ErrorResponse(err));
+//     if (!savedData) res.status(400).json(new ErrorResponse("data not saved"));
+//   });
+// });
 exports.default = router;
