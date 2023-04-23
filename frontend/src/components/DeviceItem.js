@@ -10,7 +10,6 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 const DeviceItem = ({ name, data, id }) => {
-  console.log(id);
   return (
     <Link to={`/dashboard/${id}`}>
       <Card sx={{ maxWidth: 345 }} className="p-2 m-3 col-md-6 col-sm-12">

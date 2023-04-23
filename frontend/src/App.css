@@ -8,3 +8,27 @@ body {
 a {
   text-decoration: none;
 }
+
+.date {
+  background-color: #f5f5f5;
+  border: none;
+
+  margin: 0 10px 10px 10px;
+}
+.fieldset {
+  border: solid 1px;
+  color: #bcbcbc;
+  border-radius: 3px;
+
+  padding-left: 10px;
+}
+
+.legend {
+  transform: translatey(-50%);
+  font-size: 12px;
+  font-weight: 400;
+  width: max-content;
+  background: #f5f5f5;
+  color: #626262;
+  padding: 0 0.15em;
+}
