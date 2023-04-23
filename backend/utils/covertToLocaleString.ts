@@ -10,5 +10,9 @@ export default function convertToLocaleString(data: any) {
     };
     finalData.push(newData);
   });
+  // sort data by date
+  finalData.sort((a: any, b: any) => {
+    return new Date(b.date).getTime() - new Date(a.date).getTime();
+  });
   return finalData;
 }

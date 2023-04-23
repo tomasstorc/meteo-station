@@ -35,15 +35,16 @@ router.get(
         if (!foundData)
           return res.status(200).json(new SuccessResponse("No data found"));
 
-        const finalData = processData(
+        let finalData = processData(
           foundData,
           req.query.granularity ? +req.query.granularity : 5
         );
-        let test = convertToLocaleString(finalData);
+        finalData = convertToLocaleString(finalData);
 
         return res.status(200).json(
           new SuccessResponse("ok", {
-            data: test,
+            data: finalData,
+            actualTemp: finalData[0].temperature,
           })
         );
       }
