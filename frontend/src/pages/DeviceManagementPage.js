@@ -7,6 +7,7 @@ import Navigation from "../components/Navigation";
 import { getDevices, getUsers } from "../redux/devicesSlice";
 import { parseToken } from "../redux/loginSlice";
 import AddIcon from "@mui/icons-material/Add";
+import Loading from "../components/Loading";
 
 const DeviceManagementPage = () => {
   const [open, setOpen] = useState(false);
@@ -19,8 +20,8 @@ const DeviceManagementPage = () => {
     dispatch(getDevices(token));
     dispatch(getUsers(token));
   }, [dispatch, token]);
-  console.log(allDevices);
-  if (loading) return "loading...";
+
+  if (loading) return <Loading />;
   return (
     <div className="row">
       <Navigation className="col" />

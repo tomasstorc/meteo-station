@@ -3,9 +3,6 @@ import { getData } from "../redux/dataSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { parseToken } from "../redux/loginSlice";
 import { useParams } from "react-router-dom";
-import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 
 import Navigation from "../components/Navigation";
 import {
@@ -17,19 +14,22 @@ import {
 } from "@mui/material";
 import { Container } from "@mui/system";
 import GraphComponent from "../components/GraphComponent";
-import { MobileDateTimePicker } from "@mui/x-date-pickers";
+import Loading from "../components/Loading";
 
 const Dashboard = () => {
   const dispatch = useDispatch();
   const { token } = useSelector((state) => state.login);
-  const { data } = useSelector((state) => state.data);
+  const { data, loading } = useSelector((state) => state.data);
   const { id } = useParams();
-
+  const now = new Date();
   const [parameters, setParameters] = useState({
     granularity: 5,
-    dateFrom: new Date(Date.now() - 1000 * (60 * 60)).toISOString(),
-    dateTo: new Date().toISOString(),
+    dateFrom: new Date(now.getFullYear(), now.getMonth(), now.getDate() - 7)
+      .toISOString()
+      .split(".")[0],
+    dateTo: new Date().toISOString().split(".")[0],
   });
+
   useEffect(() => {
     dispatch(parseToken());
     let payload = {
@@ -48,8 +48,7 @@ const Dashboard = () => {
     parameters.dateFrom,
     parameters.dateTo,
   ]);
-  console.log(data);
-
+  if (loading) return <Loading />;
   return (
     <div className="row">
       <Navigation className="col" />
@@ -80,57 +79,77 @@ const Dashboard = () => {
             </FormControl>
           </div>
           <div className="d-flex justify-content-end col">
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DemoContainer
-                components={["MobileDateTimePicker", "MobileDateTimePicker"]}
-              >
-                <MobileDateTimePicker
-                  label={`Date and time from`}
-                  openTo="year"
-                  name="dateFrom"
-                  onChange={(e) => {
-                    setParameters({
-                      granularity: parameters.granularity,
-                      dateFrom: e.$d.toISOString(),
-                      dateTo: parameters.dateTo,
-                    });
-                  }}
-                />
-              </DemoContainer>
-            </LocalizationProvider>
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DemoContainer
-                components={["MobileDateTimePicker", "MobileDateTimePicker"]}
-              >
-                <MobileDateTimePicker
-                  label={`Date and time to`}
-                  openTo="year"
-                  name="dateTo"
-                  onChange={(e) => {
-                    setParameters({
-                      granularity: parameters.granularity,
-                      dateFrom: parameters.dateFrom,
-                      dateTo: e.$d.toISOString(),
-                    });
-                  }}
-                  // value={parameters.dateTo}
-                />
-              </DemoContainer>
-            </LocalizationProvider>
+            <div class="fieldset">
+              <h1 class="legend">Date and time from</h1>
+
+              <input
+                labelId="demo-simple-select-disabled-label"
+                className="date"
+                id="dateFrom"
+                label="Date and time from"
+                name="dateFrom"
+                type="datetime-local"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                value={parameters.dateFrom}
+                onChange={(e) => {
+                  setParameters({
+                    granularity: parameters.granularity,
+                    dateFrom: e.target.value,
+                    dateTo: parameters.dateTo,
+                  });
+                }}
+                max={parameters.dateTo}
+              />
+            </div>
+            <div class="fieldset">
+              <h1 class="legend">Date and time to</h1>
+
+              <input
+                labelId="demo-simple-select-disabled-label"
+                className="date"
+                id="dateTo"
+                label="Date and time to"
+                name="dateTo"
+                type="datetime-local"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                value={parameters.dateTo}
+                onChange={(e) => {
+                  setParameters({
+                    granularity: parameters.granularity,
+                    dateFrom: parameters.dateFrom,
+                    dateTo: e.target.value,
+                  });
+                }}
+                min={parameters.dateFrom}
+                max={new Date().toISOString().split(".")[0]}
+              />
+            </div>
           </div>
         </div>
-        <GraphComponent
-          name={"Temperature"}
-          color={"#FFA503"}
-          data={data}
-          type="temperature"
-        />
-        <GraphComponent
-          name={"Humidity"}
-          color={"#145FF4"}
-          data={data}
-          type="humidity"
-        />
+        {data?.length === 0 ? (
+          <div className="text-center bg-white p-3 mt-3">
+            There are no records to display
+          </div>
+        ) : (
+          <>
+            <GraphComponent
+              name={"Temperature"}
+              color={"#FFA503"}
+              data={data}
+              type="temperature"
+            />
+            <GraphComponent
+              name={"Humidity"}
+              color={"#145FF4"}
+              data={data}
+              type="humidity"
+            />{" "}
+          </>
+        )}
       </Container>
     </div>
   );
