@@ -10,6 +10,10 @@ function convertToLocaleString(data) {
         };
         finalData.push(newData);
     });
+    // sort data by date
+    finalData.sort((a, b) => {
+        return new Date(b.date).getTime() - new Date(a.date).getTime();
+    });
     return finalData;
 }
 exports.default = convertToLocaleString;
