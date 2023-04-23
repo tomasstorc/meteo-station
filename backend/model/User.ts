@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import validatePassword from "../utils/password-validator";
+
 import IUser from "../interface/User";
 
 const userSchema = new mongoose.Schema<IUser>({

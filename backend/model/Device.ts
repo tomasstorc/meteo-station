@@ -1,4 +1,4 @@
-import mongoose, { mongo } from "mongoose";
+import mongoose from "mongoose";
 import IDevice from "../interface/Device";
 
 const deviceSchema = new mongoose.Schema<IDevice>({

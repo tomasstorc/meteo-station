@@ -1,5 +1,5 @@
 import { RequestHandler, Request, Response, NextFunction } from "express";
-import mongoose, { CallbackError } from "mongoose";
+import { CallbackError } from "mongoose";
 import IAuthKey from "../interface/AuthKey";
 import AuthKey from "../model/AuthKey";
 import ErrorResponse from "../response/error-response";

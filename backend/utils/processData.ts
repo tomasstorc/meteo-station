@@ -12,7 +12,7 @@ export default function processData(rawData: Array<any>, granularity: number) {
   if (interval > timeDifference / rawData.length) {
     // Upsampling
     return linearInterpolation(rawData, interval);
-  } else if (interval > timeDifference / rawData.length) {
+  } else if (interval < timeDifference / rawData.length) {
     // Downsampling
     return averaging(rawData, interval);
   } else {

@@ -1,5 +1,3 @@
-import IData from "../interface/Data";
-
 export default function convertToLocaleString(data: any) {
   let finalData: any = [];
   data.forEach((d: any) => {

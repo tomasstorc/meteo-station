@@ -3,12 +3,9 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import User from "../model/User";
 
-import IUser from "../interface/User";
-
 import ErrorResponse from "../response/error-response";
 import SuccessResponse from "../response/success-response";
 import isAuthenticated from "../middleware/isAuthenticated";
-import { Document } from "mongoose";
 
 const router = express.Router();
 

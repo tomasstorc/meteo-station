@@ -15,7 +15,7 @@ function processData(rawData, granularity) {
         // Upsampling
         return (0, upsample_1.default)(rawData, interval);
     }
-    else if (interval > timeDifference / rawData.length) {
+    else if (interval < timeDifference / rawData.length) {
         // Downsampling
         return (0, downSample_1.default)(rawData, interval);
     }
