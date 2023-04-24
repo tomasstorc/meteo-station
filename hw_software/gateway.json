@@ -419,18 +419,261 @@
         ]
     },
     {
-        "id": "b0f7ce7d0e111fd5",
-        "type": "link in",
+        "id": "f4ec151c747150e9",
+        "type": "inject",
         "z": "7c9bfcf79881fe54",
-        "name": "linkInDbSaved",
-        "links": [
-            "0645d5f2b73df463"
+        "name": "Start every 15 minutes",
+        "props": [
+            {
+                "p": "payload"
+            }
         ],
-        "x": 95,
-        "y": 100,
+        "repeat": "900",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "10",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 130,
+        "y": 80,
+        "wires": [
+            [
+                "30ac522761cec396"
+            ]
+        ]
+    },
+    {
+        "id": "30ac522761cec396",
+        "type": "sqlite",
+        "z": "7c9bfcf79881fe54",
+        "mydb": "2999383859eb40b1",
+        "sqlquery": "fixed",
+        "sql": "SELECT id, temperature, humidity, `timestamp` \nFROM data_for_call\nWHERE sendAway=0;",
+        "name": "SELECT data for call",
+        "x": 380,
+        "y": 80,
+        "wires": [
+            [
+                "085c442d3daef2f2"
+            ]
+        ]
+    },
+    {
+        "id": "085c442d3daef2f2",
+        "type": "switch",
+        "z": "7c9bfcf79881fe54",
+        "name": "Check if data",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "nempty"
+            }
+        ],
+        "checkall": "false",
+        "repair": false,
+        "outputs": 1,
+        "x": 590,
+        "y": 80,
+        "wires": [
+            [
+                "a0c665989113e220"
+            ]
+        ]
+    },
+    {
+        "id": "e94aca6c6a20370e",
+        "type": "http request",
+        "z": "7c9bfcf79881fe54",
+        "name": "POST request",
+        "method": "POST",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "bearer",
+        "senderr": false,
+        "headers": [],
+        "x": 880,
+        "y": 200,
+        "wires": [
+            [
+                "c77c807196443962"
+            ]
+        ]
+    },
+    {
+        "id": "a0c665989113e220",
+        "type": "function",
+        "z": "7c9bfcf79881fe54",
+        "name": "Prepare data from DB",
+        "func": "let db_data = msg.payload;\nlet ids = [];\nlet body = [];\n\ndb_data.forEach(function (arrayObject) {\n    ids.push(arrayObject.id);\n    body.push({temp: arrayObject.temperature,\n                hum: arrayObject.humidity,\n                timestamp: arrayObject.timestamp})\n});\n\nflow.ids = ids;\n\nreturn {payload: body};",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 320,
+        "y": 200,
+        "wires": [
+            [
+                "f959c529073cb0fb",
+                "e7e8bf2198603813"
+            ]
+        ]
+    },
+    {
+        "id": "f959c529073cb0fb",
+        "type": "split",
+        "z": "7c9bfcf79881fe54",
+        "name": "Split into chunks",
+        "splt": "\\n",
+        "spltType": "str",
+        "arraySplt": "5",
+        "arraySpltType": "len",
+        "stream": false,
+        "addname": "",
+        "x": 540,
+        "y": 200,
+        "wires": [
+            [
+                "7e6ebc21f1c6811c",
+                "65b2fcf1b68f78d0"
+            ]
+        ]
+    },
+    {
+        "id": "7e6ebc21f1c6811c",
+        "type": "function",
+        "z": "7c9bfcf79881fe54",
+        "name": "Body",
+        "func": "let data = msg.payload;\nlet body = {};\n\nbody.data = data;\nbody.device = \"UNO_guestroom\";\n\nreturn { payload: body };",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 710,
+        "y": 200,
+        "wires": [
+            [
+                "e94aca6c6a20370e",
+                "090279738a9c1a90"
+            ]
+        ]
+    },
+    {
+        "id": "c77c807196443962",
+        "type": "switch",
+        "z": "7c9bfcf79881fe54",
+        "name": "Check response",
+        "property": "code",
+        "propertyType": "jsonata",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "200",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 540,
+        "y": 320,
+        "wires": [
+            [
+                "cfdc2755cf0730ec"
+            ]
+        ]
+    },
+    {
+        "id": "cfdc2755cf0730ec",
+        "type": "function",
+        "z": "7c9bfcf79881fe54",
+        "name": "UPDATE query",
+        "func": "// temp|hum\nmsg.params = flow.ids;\n\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 740,
+        "y": 320,
+        "wires": [
+            [
+                "bf8917b9a3f32df8"
+            ]
+        ]
+    },
+    {
+        "id": "bf8917b9a3f32df8",
+        "type": "sqlite",
+        "z": "7c9bfcf79881fe54",
+        "mydb": "2999383859eb40b1",
+        "sqlquery": "prepared",
+        "sql": "UPDATE data_for_call\nSET sendAway=0\nWHERE id IN (?);",
+        "name": "UPDATE",
+        "x": 920,
+        "y": 320,
         "wires": [
             []
         ]
+    },
+    {
+        "id": "65b2fcf1b68f78d0",
+        "type": "debug",
+        "z": "7c9bfcf79881fe54",
+        "name": "chunks",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 720,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "e7e8bf2198603813",
+        "type": "debug",
+        "z": "7c9bfcf79881fe54",
+        "name": "whole",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 530,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "090279738a9c1a90",
+        "type": "debug",
+        "z": "7c9bfcf79881fe54",
+        "name": "body",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 890,
+        "y": 160,
+        "wires": []
     },
     {
         "id": "b1b13d7e0aafc0a4",
