@@ -1,8 +1,6 @@
 import { RequestHandler, Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import ErrorResponse from "../response/error-response";
-import AuthKey from "../model/AuthKey";
-import { CallbackError } from "mongoose";
 
 const isAuthenticated: RequestHandler = (
   req: Request,

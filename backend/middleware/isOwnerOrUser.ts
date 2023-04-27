@@ -1,5 +1,5 @@
 import { RequestHandler, Request, Response, NextFunction } from "express";
-import mongoose, { CallbackError } from "mongoose";
+import { CallbackError } from "mongoose";
 import Device from "../model/Device";
 import IDevice from "../interface/Device";
 import ErrorResponse from "../response/error-response";

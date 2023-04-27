@@ -1,6 +1,4 @@
-import IData from "../interface/Data";
-
-export default async function convertToLocaleString(data: any) {
+export default function convertToLocaleString(data: any) {
   let finalData: any = [];
   data.forEach((d: any) => {
     let newData = {
@@ -9,6 +7,10 @@ export default async function convertToLocaleString(data: any) {
       humidity: d.humidity,
     };
     finalData.push(newData);
+  });
+  // sort data by date
+  finalData.sort((a: any, b: any) => {
+    return new Date(b.date).getTime() - new Date(a.date).getTime();
   });
   return finalData;
 }

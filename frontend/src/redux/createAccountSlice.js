@@ -37,7 +37,6 @@ export const createAccountSlice = createSlice({
       state.loading = true;
     },
     [createAccount.fulfilled]: (state, action) => {
-      console.log(action.payload);
       if (action.payload.data) {
         state.loading = false;
       } else {

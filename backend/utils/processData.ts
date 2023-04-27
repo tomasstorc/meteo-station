@@ -4,14 +4,15 @@ import averaging from "./downSample";
 
 export default function processData(rawData: Array<any>, granularity: number) {
   const interval = granularity * 60 * 1000; // Převod na milisekundy
-
+  if (rawData.length === 0) {
+    return rawData;
+  }
   const timeDifference = rawData[rawData.length - 1].date - rawData[0].date;
-
 
   if (interval > timeDifference / rawData.length) {
     // Upsampling
     return linearInterpolation(rawData, interval);
-  } else if (interval > timeDifference / rawData.length) {
+  } else if (interval < timeDifference / rawData.length) {
     // Downsampling
     return averaging(rawData, interval);
   } else {

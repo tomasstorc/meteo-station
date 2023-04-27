@@ -1,4 +1,4 @@
-import express, { Express, Request, Response } from "express";
+import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import path from "path";
@@ -22,13 +22,18 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors());
 app.use(morganMiddleware);
-app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/api/user", userController);
 app.use("/api/data", dataController);
 app.use("/api/device", deviceController);
 app.use("/api/auth", authControlller);
 app.use("/api/key", keyController);
+
+app.use(express.static(path.join(__dirname, "public")));
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname + "/public/index.html"));
+});
 
 dbConnect();
 if (process.env.NODE_ENV !== "production") dbSeed();

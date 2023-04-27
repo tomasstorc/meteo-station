@@ -7,7 +7,6 @@ import { CallbackError } from "mongoose";
 import bcrypt from "bcrypt";
 import SuccessResponse from "../response/success-response";
 import isAuthenticated from "../middleware/isAuthenticated";
-import isOwner from "../middleware/isOwner";
 
 const router = express.Router();
 

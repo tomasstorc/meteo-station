@@ -17,13 +17,16 @@ router.get(
   isAuthenticated,
   isOwnerOrUser,
   (req: Request, res: Response) => {
+    console.log(new Date(req.query.dateFrom as string), req.query.dateTo);
     Data.find(
       {
         deviceid: req.params.id,
         date: {
-          $lte: req.query.dateTo ? req.query.dateFrom : new Date(),
+          $lte: req.query.dateTo
+            ? new Date(req.query.dateTo as string)
+            : new Date(),
           $gte: req.query.dateFrom
-            ? req.query.dateFrom
+            ? new Date(req.query.dateFrom as string)
             : new Date(Date.now() - 1000 * (60 * 60)),
         },
       },
@@ -32,37 +35,49 @@ router.get(
         if (!foundData)
           return res.status(200).json(new SuccessResponse("No data found"));
 
-        console.log(req.query.granularity);
-
-
-        const finalData = processData(
+        let finalData = processData(
           foundData,
           req.query.granularity ? +req.query.granularity : 5
         );
+        finalData = convertToLocaleString(finalData);
 
         return res.status(200).json(
           new SuccessResponse("ok", {
             data: finalData,
+            actualTemp: finalData[0].temperature,
           })
         );
-
       }
     );
   }
 );
 
 router.post("/", isDeviceAuthenticated, (req: Request, res: Response) => {
-  let newData = new Data<IData>({
-    deviceid: req.body.deviceid,
-    temperature: req.body.temperature,
-    humidity: req.body.humidity,
-    date: new Date(),
-  });
-  newData.save((err: CallbackError | undefined, savedData: IData) => {
-    if (err) return res.status(400).json(new ErrorResponse(err));
-    if (!savedData) res.status(400).json(new ErrorResponse("data not saved"));
-    return res.sendStatus(201);
+  req.body.data.forEach((data: IData) => {
+    const newData = new Data<IData>({
+      deviceid: data.deviceid,
+      temperature: data.temperature,
+      humidity: data.humidity,
+      date: data.date || new Date(),
+    });
+    newData.save((err: CallbackError | undefined, savedData: IData) => {
+      if (err) return res.status(400).json(new ErrorResponse(err));
+      if (!savedData) res.status(400).json(new ErrorResponse("data not saved"));
+    });
+    return res.status(201).json(new SuccessResponse("ok"));
   });
 });
+
+//   let newData = new Data<IData>({
+//     deviceid: req.body.deviceid,
+//     temperature: req.body.temperature,
+//     humidity: req.body.humidity,
+//     date: new Date(),
+//   });
+//   newData.save((err: CallbackError | undefined, savedData: IData) => {
+//     if (err) return res.status(400).json(new ErrorResponse(err));
+//     if (!savedData) res.status(400).json(new ErrorResponse("data not saved"));
+//   });
+// });
 
 export default router;

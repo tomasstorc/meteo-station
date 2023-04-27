@@ -15,7 +15,6 @@ const DeviceManagementTable = ({ data, users }) => {
     name: "",
     members: [],
   });
-  console.log(data);
 
   const columns = [
     {

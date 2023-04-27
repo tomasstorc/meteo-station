@@ -7,7 +7,6 @@ import {
   Tabs,
   AppBar,
   Alert,
-  CircularProgress,
   FormHelperText,
 } from "@mui/material";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
@@ -16,6 +15,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getLogin } from "../redux/loginSlice";
 import { createAccount } from "../redux/createAccountSlice";
 import { Navigate } from "react-router-dom";
+import Loading from "../components/Loading";
 
 const LoginPage = () => {
   const [value, setValue] = useState(0);
@@ -63,8 +63,7 @@ const LoginPage = () => {
     }
   };
 
-  if (loading || loadingNewAccount) return <CircularProgress />;
-  console.log(user);
+  if (loading || loadingNewAccount) return <Loading />;
 
   return (
     <div

@@ -30,8 +30,8 @@ jobs:
           cd ..
       - name: "copy builded fe"
         run: |
-          mkdir -p backend/dist/public
-          cp -r frontend/build/* backend/dist/public/
+          mkdir -p backend/fe
+          cp -r frontend/build/* backend/fe/
 
       - name: docker login
         uses: docker/login-action@v1

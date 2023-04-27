@@ -10,7 +10,6 @@ import { deleteDevice, getDevices } from "../redux/devicesSlice";
 export default function DeleteModal({ open, onClose, deviceData }) {
   const dispatch = useDispatch();
   const { token } = useSelector((state) => state.login);
-  console.log(deviceData.id);
   return (
     <div>
       <Dialog

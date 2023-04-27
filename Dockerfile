@@ -1,9 +1,17 @@
-FROM node:14
+FROM node:14 AS build
 WORKDIR /app
+COPY backend/package*.json ./
+COPY backend/tsconfig.json ./
+RUN npm i
+RUN npm install typescript -g
+COPY backend .
+RUN tsc
 
-COPY backend/package*.json /app/
+FROM node:14-alpine
+WORKDIR /app
+COPY --from=build /app/dist .
+COPY --from=build /app/package*.json ./
+COPY backend/fe ./public
 RUN npm ci
-RUN cd backend && tsc && cd ..
-COPY backend/dist /app/
 EXPOSE 8001
 CMD ["node", "index.js"]

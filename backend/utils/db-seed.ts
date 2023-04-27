@@ -1,4 +1,3 @@
-import mongoose from "mongoose";
 import IData from "../interface/Data";
 import Data from "../model/Data";
 import logger from "./logger";
