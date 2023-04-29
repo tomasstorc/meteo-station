@@ -19,7 +19,7 @@ import Loading from "../components/Loading";
 const Dashboard = () => {
   const dispatch = useDispatch();
   const { token } = useSelector((state) => state.login);
-  const { data, loading } = useSelector((state) => state.data);
+  const { data, loading } = useSelector((state) => state?.data);
   const { id } = useParams();
   const now = new Date();
   const [parameters, setParameters] = useState({
@@ -35,18 +35,18 @@ const Dashboard = () => {
     let payload = {
       id: id,
       token: token,
-      granularity: parameters.granularity,
-      dateFrom: parameters.dateFrom,
-      dateTo: parameters.dateTo,
+      granularity: parameters?.granularity,
+      dateFrom: parameters?.dateFrom,
+      dateTo: parameters?.dateTo,
     };
     dispatch(getData(payload));
   }, [
     dispatch,
     token,
     id,
-    parameters.granularity,
-    parameters.dateFrom,
-    parameters.dateTo,
+    parameters?.granularity,
+    parameters?.dateFrom,
+    parameters?.dateTo,
   ]);
   if (loading) return <Loading />;
   return (
@@ -62,12 +62,12 @@ const Dashboard = () => {
                 onChange={(e) => {
                   setParameters({
                     granularity: e.target.value,
-                    dateFrom: parameters.dateFrom,
-                    dateTo: parameters.dateTo,
+                    dateFrom: parameters?.dateFrom,
+                    dateTo: parameters?.dateTo,
                   });
                 }}
                 id="granularity"
-                value={parameters.granularity}
+                value={parameters?.granularity}
                 name="granularity"
                 label="Data granularity"
               >
@@ -79,8 +79,8 @@ const Dashboard = () => {
             </FormControl>
           </div>
           <div className="d-flex justify-content-end col">
-            <div class="fieldset">
-              <h1 class="legend">Date and time from</h1>
+            <div className="fieldset">
+              <h1 className="legend">Date and time from</h1>
 
               <input
                 labelId="demo-simple-select-disabled-label"
@@ -92,19 +92,19 @@ const Dashboard = () => {
                 InputLabelProps={{
                   shrink: true,
                 }}
-                value={parameters.dateFrom}
+                value={parameters?.dateFrom}
                 onChange={(e) => {
                   setParameters({
-                    granularity: parameters.granularity,
+                    granularity: parameters?.granularity,
                     dateFrom: e.target.value,
-                    dateTo: parameters.dateTo,
+                    dateTo: parameters?.dateTo,
                   });
                 }}
-                max={parameters.dateTo}
+                max={parameters?.dateTo}
               />
             </div>
-            <div class="fieldset">
-              <h1 class="legend">Date and time to</h1>
+            <div className="fieldset">
+              <h1 className="legend">Date and time to</h1>
 
               <input
                 labelId="demo-simple-select-disabled-label"
@@ -116,21 +116,21 @@ const Dashboard = () => {
                 InputLabelProps={{
                   shrink: true,
                 }}
-                value={parameters.dateTo}
+                value={parameters?.dateTo}
                 onChange={(e) => {
                   setParameters({
-                    granularity: parameters.granularity,
-                    dateFrom: parameters.dateFrom,
+                    granularity: parameters?.granularity,
+                    dateFrom: parameters?.dateFrom,
                     dateTo: e.target.value,
                   });
                 }}
-                min={parameters.dateFrom}
+                min={parameters?.dateFrom}
                 max={new Date().toISOString().split(".")[0]}
               />
             </div>
           </div>
         </div>
-        {data?.length === 0 ? (
+        {data?.length === 0 || data === undefined ? (
           <div className="text-center bg-white p-3 mt-3">
             There are no records to display
           </div>
