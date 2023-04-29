@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   allDevices: [],
+  dataDetail: {},
   setEditId: null,
   editDevice: {},
   users: [],
@@ -67,6 +68,21 @@ export const deleteDevice = createAsyncThunk(
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
+        authorization: `Bearer ${data.token}`,
+      },
+    })
+      .then((data) => data.json())
+      .catch((err) => err);
+    return res;
+  }
+);
+
+export const getDeviceDetail = createAsyncThunk(
+  "devices/getDeviceDetail",
+  async (data) => {
+    const res = await fetch(`/api/device/${data.id}`, {
+      method: "GET",
+      headers: {
         authorization: `Bearer ${data.token}`,
       },
     })
@@ -148,6 +164,17 @@ export const devicesSlice = createSlice({
     [getUsers.fulfilled]: (state, action) => {
       state.loading = false;
       state.users = action.payload.data;
+    },
+    [getDeviceDetail.rejected]: (state) => {
+      state.loading = false;
+      state.error = true;
+    },
+    [getDeviceDetail.pending]: (state) => {
+      state.loading = true;
+    },
+    [getDeviceDetail.fulfilled]: (state, action) => {
+      state.loading = false;
+      state.dataDetail = action.payload.data;
     },
   },
 });
