@@ -32,8 +32,10 @@ router.get(
       },
       (err: CallbackError | undefined, foundData: Array<Document<IData>>) => {
         if (err) return res.status(400).json(new ErrorResponse(err));
-        if (!foundData)
+        if (foundData.length === 0)
           return res.status(200).json(new SuccessResponse("No data found"));
+
+        console.log(foundData);
 
         let finalData = processData(
           foundData,

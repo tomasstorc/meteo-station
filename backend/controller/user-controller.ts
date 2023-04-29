@@ -21,7 +21,7 @@ router.post("/", (req: Request, res: Response) => {
       );
   }
   User.findOne(
-    { username: req.body.username },
+    { username: req.body.username.toString() },
     (err: CallbackError | undefined, foundUser: IUser | undefined) => {
       if (err) return res.status(400).json(new ErrorResponse(err));
       if (foundUser)

@@ -17,7 +17,7 @@ router.post("/", (req, res) => {
             .status(400)
             .json(new error_response_1.default("Password did not meet minimum criteria. One upper case, one lower case, minimum 6 characters"));
     }
-    User_1.default.findOne({ username: req.body.username }, (err, foundUser) => {
+    User_1.default.findOne({ username: req.body.username.toString() }, (err, foundUser) => {
         if (err)
             return res.status(400).json(new error_response_1.default(err));
         if (foundUser)
