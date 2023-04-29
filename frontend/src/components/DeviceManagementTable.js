@@ -4,19 +4,47 @@ import ModeEditIcon from "@mui/icons-material/ModeEdit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditForm from "./EditForm";
 import DeleteModal from "./DeleteModal";
+import DeviceDetail from "./DeviceDetail";
+import SearchIcon from "@mui/icons-material/Search";
+import { useDispatch } from "react-redux";
+import { getDeviceDetail } from "../redux/devicesSlice";
 
-const DeviceManagementTable = ({ data, users }) => {
+const DeviceManagementTable = ({ data, users, token }) => {
+  const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
+  const [openDetail, setOpenDetail] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleOpenDelete = () => setOpenDelete(true);
+  const handleOpenDetail = () => setOpenDetail(true);
+
   const [deviceData, setDeviceData] = useState({
     id: "",
     name: "",
     members: [],
   });
-
+  console.log(openDetail);
   const columns = [
+    {
+      name: "Detail",
+      selector: (row) => (
+        <SearchIcon
+          size={20}
+          className="pointer"
+          onClick={(e) => {
+            e.preventDefault();
+            let payload = {
+              id: row._id,
+              token,
+            };
+            dispatch(getDeviceDetail(payload));
+            handleOpenDetail();
+          }}
+        />
+      ),
+      sortable: false,
+      maxWidth: "10px",
+    },
     {
       name: "Name",
       selector: (row) => row.name,
@@ -74,6 +102,7 @@ const DeviceManagementTable = ({ data, users }) => {
 
   return (
     <>
+      <DeviceDetail open={openDetail} onClose={setOpenDetail} />
       <EditForm
         open={open}
         onClose={setOpen}
@@ -85,6 +114,7 @@ const DeviceManagementTable = ({ data, users }) => {
         onClose={setOpenDelete}
         deviceData={deviceData}
       />
+
       <DataTable
         className="mt-3"
         columns={columns}
