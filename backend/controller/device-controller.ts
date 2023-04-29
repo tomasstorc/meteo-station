@@ -64,7 +64,7 @@ router.get(
           res.status(404).json(new ErrorResponse("no device found"));
 
         AuthKey.findOne({ deviceId: foundDevice._id }).exec(
-          (err: CallbackError, foundKey: IAuthKey) => {
+          (err: CallbackError, foundKey: any) => {
             if (err) return res.status(400).json(new ErrorResponse(err));
             if (!foundKey)
               return res.status(404).json(new ErrorResponse("no key found"));
