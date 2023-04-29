@@ -419,18 +419,290 @@
         ]
     },
     {
-        "id": "b0f7ce7d0e111fd5",
-        "type": "link in",
+        "id": "f4ec151c747150e9",
+        "type": "inject",
         "z": "7c9bfcf79881fe54",
-        "name": "linkInDbSaved",
-        "links": [
-            "0645d5f2b73df463"
+        "name": "Start every 15 minutes",
+        "props": [
+            {
+                "p": "payload"
+            }
         ],
-        "x": 95,
-        "y": 100,
+        "repeat": "900",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "10",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 130,
+        "y": 80,
         "wires": [
-            []
+            [
+                "30ac522761cec396"
+            ]
         ]
+    },
+    {
+        "id": "30ac522761cec396",
+        "type": "sqlite",
+        "z": "7c9bfcf79881fe54",
+        "mydb": "2999383859eb40b1",
+        "sqlquery": "fixed",
+        "sql": "SELECT id, temperature, humidity, `timestamp` \nFROM data_for_call\nWHERE sendAway=0\nORDER BY `timestamp` ASC\nLIMIT 15;",
+        "name": "SELECT data for call",
+        "x": 380,
+        "y": 80,
+        "wires": [
+            [
+                "085c442d3daef2f2"
+            ]
+        ]
+    },
+    {
+        "id": "085c442d3daef2f2",
+        "type": "switch",
+        "z": "7c9bfcf79881fe54",
+        "name": "Check if data",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "nempty"
+            }
+        ],
+        "checkall": "false",
+        "repair": false,
+        "outputs": 1,
+        "x": 590,
+        "y": 80,
+        "wires": [
+            [
+                "a0c665989113e220"
+            ]
+        ]
+    },
+    {
+        "id": "e94aca6c6a20370e",
+        "type": "http request",
+        "z": "7c9bfcf79881fe54",
+        "name": "POST request",
+        "method": "POST",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "https://meteo-station.azurewebsites.net/api/data",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [
+            {
+                "keyType": "Content-Type",
+                "keyValue": "",
+                "valueType": "application/json",
+                "valueValue": ""
+            },
+            {
+                "keyType": "other",
+                "keyValue": "api-key",
+                "valueType": "other",
+                "valueValue": "ff10bd4f5b8501c5d4f99bd498799dfaf121bcefd5f0028fb20094825f44bb54"
+            }
+        ],
+        "x": 900,
+        "y": 200,
+        "wires": [
+            [
+                "c77c807196443962",
+                "08a9a42398952f27"
+            ]
+        ]
+    },
+    {
+        "id": "a0c665989113e220",
+        "type": "function",
+        "z": "7c9bfcf79881fe54",
+        "name": "Prepare data from DB",
+        "func": "let db_data = msg.payload;\nlet ids = [];\nlet body = [];\n\ndb_data.forEach(function (arrayObject) {\n    ids.push(arrayObject.id);\n    body.push({temperature: arrayObject.temperature,\n        humidity: arrayObject.humidity\n    })  //timestamp: arrayObject.timestamp\n});\n\nflow.set(\"ids\", ids);\n\nreturn {payload: body};",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 340,
+        "y": 200,
+        "wires": [
+            [
+                "7e6ebc21f1c6811c"
+            ]
+        ]
+    },
+    {
+        "id": "7e6ebc21f1c6811c",
+        "type": "function",
+        "z": "7c9bfcf79881fe54",
+        "name": "Body",
+        "func": "let data = msg.payload;\nlet body = {};\n\nbody.deviceid = \"644acaca520740ec31a5ea20\";\nbody.data = data;\n\nreturn { payload: body };",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 550,
+        "y": 200,
+        "wires": [
+            [
+                "07e8b7d2a70b28d8"
+            ]
+        ]
+    },
+    {
+        "id": "c77c807196443962",
+        "type": "switch",
+        "z": "7c9bfcf79881fe54",
+        "name": "Check response",
+        "property": "statusCode",
+        "propertyType": "jsonata",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "201",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 440,
+        "y": 320,
+        "wires": [
+            [
+                "cfdc2755cf0730ec"
+            ]
+        ]
+    },
+    {
+        "id": "cfdc2755cf0730ec",
+        "type": "function",
+        "z": "7c9bfcf79881fe54",
+        "name": "UPDATE query",
+        "func": "let newMsg = flow.get(\"ids\");\nlet query = `UPDATE data_for_call SET sendAway = 1 WHERE id IN(${ newMsg });`\n\nreturn { topic: query };\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 700,
+        "y": 320,
+        "wires": [
+            [
+                "bf8917b9a3f32df8",
+                "55db868d5509fd19"
+            ]
+        ]
+    },
+    {
+        "id": "bf8917b9a3f32df8",
+        "type": "sqlite",
+        "z": "7c9bfcf79881fe54",
+        "mydb": "2999383859eb40b1",
+        "sqlquery": "msg.topic",
+        "sql": "UPDATE data_for_call \nSET sendAway = 1 \nWHERE id IN($data);",
+        "name": "UPDATE",
+        "x": 960,
+        "y": 420,
+        "wires": [
+            [
+                "29565c92b4b37d08"
+            ]
+        ]
+    },
+    {
+        "id": "090279738a9c1a90",
+        "type": "debug",
+        "z": "7c9bfcf79881fe54",
+        "name": "body",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 870,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "08a9a42398952f27",
+        "type": "debug",
+        "z": "7c9bfcf79881fe54",
+        "name": "response",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1080,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "07e8b7d2a70b28d8",
+        "type": "json",
+        "z": "7c9bfcf79881fe54",
+        "name": "json",
+        "property": "payload",
+        "action": "obj",
+        "pretty": false,
+        "x": 710,
+        "y": 200,
+        "wires": [
+            [
+                "e94aca6c6a20370e",
+                "090279738a9c1a90"
+            ]
+        ]
+    },
+    {
+        "id": "55db868d5509fd19",
+        "type": "debug",
+        "z": "7c9bfcf79881fe54",
+        "name": "params",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 960,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "29565c92b4b37d08",
+        "type": "debug",
+        "z": "7c9bfcf79881fe54",
+        "name": "SQL UPDATE",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1160,
+        "y": 380,
+        "wires": []
     },
     {
         "id": "b1b13d7e0aafc0a4",
@@ -463,13 +735,31 @@
         "z": "8a5a3f3fa3c39a4b",
         "mydb": "2999383859eb40b1",
         "sqlquery": "fixed",
-        "sql": "DELETE FROM data_for_call\nWHERE sendAway=1 AND timestamp>=datetime('now', '-1 day');",
+        "sql": "DELETE FROM data_for_call\nWHERE sendAway=1 AND timestamp<=datetime('now', '-1 day');",
         "name": "DELETE sent data",
         "x": 330,
         "y": 80,
         "wires": [
-            []
+            [
+                "6940abb749042df0"
+            ]
         ]
+    },
+    {
+        "id": "6940abb749042df0",
+        "type": "debug",
+        "z": "8a5a3f3fa3c39a4b",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 500,
+        "y": 160,
+        "wires": []
     },
     {
         "id": "120262952f2a20e4",
