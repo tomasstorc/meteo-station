@@ -10,6 +10,7 @@ import ErrorResponse from "../response/error-response";
 import IAuthKey from "../interface/AuthKey";
 import isOwnerOrUser from "../middleware/isOwnerOrUser";
 import isOwner from "../middleware/isOwner";
+import Data from "../model/Data";
 
 const router = express.Router();
 
@@ -21,10 +22,29 @@ router.get(
     Device.find()
       .or([{ owner: req.user.username }, { users: req.user.username }])
 
-      .exec((err: CallbackError | undefined, foundDevices: Array<IDevice>) => {
+      .exec((err: CallbackError | undefined, foundDevices: Array<any>) => {
         if (err) return res.status(400).json(new ErrorResponse(err));
         if (foundDevices.length === 0)
           return res.status(200).json(new SuccessResponse("no devices"));
+
+        foundDevices.forEach((device) => {
+          console.log(device);
+
+          Data.find({ deviceId: device._id.toString() })
+            .limit(1)
+
+            .exec((err: CallbackError | undefined, foundData: any) => {
+              console.log(foundData);
+
+              if (err) return res.status(400).json(new ErrorResponse(err));
+              if (foundData.length === 0) {
+                device.temperature = 0;
+              } else {
+                device.temperature = foundData[0].temperature;
+              }
+            });
+        });
+
         return res
           .status(200)
           .json(new SuccessResponse("success", foundDevices));
@@ -37,14 +57,25 @@ router.get(
   isAuthenticated,
   isOwnerOrUser,
   (req: Request, res: Response) => {
-    Device.findById(req.params.id)
-      .populate(["owner", "users"])
-      .exec((err: CallbackError, foundDevice: any) => {
+    Device.findById(req.params.id).exec(
+      (err: CallbackError, foundDevice: any) => {
         if (err) return res.status(400).json(new ErrorResponse(err));
         if (!foundDevice)
           res.status(404).json(new ErrorResponse("no device found"));
-        return res.status(200).json(new SuccessResponse(foundDevice));
-      });
+
+        AuthKey.findOne({ deviceId: foundDevice._id }).exec(
+          (err: CallbackError, foundKey: any) => {
+            if (err) return res.status(400).json(new ErrorResponse(err));
+            if (!foundKey)
+              return res.status(404).json(new ErrorResponse("no key found"));
+            foundDevice = { ...foundDevice._doc, key: foundKey.key };
+            return res
+              .status(200)
+              .json(new SuccessResponse("success", foundDevice));
+          }
+        );
+      }
+    );
   }
 );
 

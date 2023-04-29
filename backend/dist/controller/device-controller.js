@@ -12,6 +12,7 @@ const Device_1 = __importDefault(require("../model/Device"));
 const error_response_1 = __importDefault(require("../response/error-response"));
 const isOwnerOrUser_1 = __importDefault(require("../middleware/isOwnerOrUser"));
 const isOwner_1 = __importDefault(require("../middleware/isOwner"));
+const Data_1 = __importDefault(require("../model/Data"));
 const router = express_1.default.Router();
 router.get("/", isAuthenticated_1.default, isOwnerOrUser_1.default, (req, res) => {
     Device_1.default.find()
@@ -21,20 +22,43 @@ router.get("/", isAuthenticated_1.default, isOwnerOrUser_1.default, (req, res) =
             return res.status(400).json(new error_response_1.default(err));
         if (foundDevices.length === 0)
             return res.status(200).json(new success_response_1.default("no devices"));
+        foundDevices.forEach((device) => {
+            console.log(device);
+            Data_1.default.find({ deviceId: device._id.toString() })
+                .limit(1)
+                .exec((err, foundData) => {
+                console.log(foundData);
+                if (err)
+                    return res.status(400).json(new error_response_1.default(err));
+                if (foundData.length === 0) {
+                    device.temperature = 0;
+                }
+                else {
+                    device.temperature = foundData[0].temperature;
+                }
+            });
+        });
         return res
             .status(200)
             .json(new success_response_1.default("success", foundDevices));
     });
 });
 router.get("/:id", isAuthenticated_1.default, isOwnerOrUser_1.default, (req, res) => {
-    Device_1.default.findById(req.params.id)
-        .populate(["owner", "users"])
-        .exec((err, foundDevice) => {
+    Device_1.default.findById(req.params.id).exec((err, foundDevice) => {
         if (err)
             return res.status(400).json(new error_response_1.default(err));
         if (!foundDevice)
             res.status(404).json(new error_response_1.default("no device found"));
-        return res.status(200).json(new success_response_1.default(foundDevice));
+        AuthKey_1.default.findOne({ deviceId: foundDevice._id }).exec((err, foundKey) => {
+            if (err)
+                return res.status(400).json(new error_response_1.default(err));
+            if (!foundKey)
+                return res.status(404).json(new error_response_1.default("no key found"));
+            foundDevice = Object.assign(Object.assign({}, foundDevice._doc), { key: foundKey.key });
+            return res
+                .status(200)
+                .json(new success_response_1.default("success", foundDevice));
+        });
     });
 });
 router.post("/", isAuthenticated_1.default, (req, res) => {
