@@ -45,7 +45,7 @@ function Navigation() {
   return (
     <>
       <Paper
-        className="d-lg-block d-none"
+        className="d-xl-block d-none"
         sx={{ width: 250, maxWidth: "100%", height: "100vh" }}
       >
         <div className="d-flex justify-content-center my-2">
@@ -90,7 +90,7 @@ function Navigation() {
       <Stack
         direction="row"
         spacing={2}
-        className="d-lg-none d-sm-block d-md-block"
+        className="d-xl-none d-lg-block d-sm-block d-md-block"
       >
         <div>
           <Button

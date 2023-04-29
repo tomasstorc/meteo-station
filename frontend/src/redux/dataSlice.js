@@ -8,11 +8,11 @@ const initialState = {
 
 export const getData = createAsyncThunk("data/getData", async (data) => {
   const res = await fetch(
-    `/api/data/${data.id}?granularity=${data.granularity}&dateFrom=${data.dateFrom}&dateTo=${data.dateTo}`,
+    `/api/data/${data?.id}?granularity=${data?.granularity}&dateFrom=${data?.dateFrom}&dateTo=${data?.dateTo}`,
     {
       method: "GET",
       headers: {
-        authorization: `Bearer ${data.token}`,
+        authorization: `Bearer ${data?.token}`,
       },
     }
   )
@@ -35,7 +35,7 @@ export const dataSlice = createSlice({
     },
     [getData.fulfilled]: (state, action) => {
       state.loading = false;
-      state.data = action.payload.data.data;
+      state.data = action.payload.data?.data;
     },
   },
 });
