@@ -9,15 +9,15 @@ import SearchIcon from "@mui/icons-material/Search";
 import { useDispatch } from "react-redux";
 import { getDeviceDetail } from "../redux/devicesSlice";
 
-const DeviceManagementTable = ({ data, users, token }) => {
+const DeviceManagementTable = ({ data, users, token, username }) => {
   const dispatch = useDispatch();
+  console.log(username);
   const [open, setOpen] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
   const [openDetail, setOpenDetail] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleOpenDelete = () => setOpenDelete(true);
   const handleOpenDetail = () => setOpenDetail(true);
-
   const [deviceData, setDeviceData] = useState({
     id: "",
     name: "",
@@ -62,39 +62,41 @@ const DeviceManagementTable = ({ data, users, token }) => {
     },
     {
       name: "Edit",
-      selector: (row) => (
-        <ModeEditIcon
-          size={20}
-          className="pointer"
-          onClick={() => {
-            setDeviceData({
-              id: row._id,
-              name: row.name,
-              members: row.users,
-            });
-            handleOpen();
-          }}
-        />
-      ),
+      selector: (row) =>
+        row?.owner === username && (
+          <ModeEditIcon
+            size={20}
+            className="pointer"
+            onClick={() => {
+              setDeviceData({
+                id: row._id,
+                name: row.name,
+                members: row.users,
+              });
+              handleOpen();
+            }}
+          />
+        ),
       sortable: false,
       maxWidth: "10px",
     },
     {
       name: "Delete",
-      selector: (row) => (
-        <DeleteIcon
-          size={20}
-          className="text-danger pointer"
-          onClick={() => {
-            setDeviceData({
-              id: row._id,
-              name: row.name,
-              members: row.users,
-            });
-            handleOpenDelete();
-          }}
-        />
-      ),
+      selector: (row) =>
+        row?.owner === username && (
+          <DeleteIcon
+            size={20}
+            className="text-danger pointer"
+            onClick={() => {
+              setDeviceData({
+                id: row._id,
+                name: row.name,
+                members: row.users,
+              });
+              handleOpenDelete();
+            }}
+          />
+        ),
       sortable: false,
       maxWidth: "10px",
     },

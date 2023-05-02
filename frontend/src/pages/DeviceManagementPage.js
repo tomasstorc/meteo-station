@@ -10,10 +10,11 @@ import AddIcon from "@mui/icons-material/Add";
 
 const DeviceManagementPage = () => {
   const [open, setOpen] = useState(false);
-
+  const { user } = useSelector((state) => state.login);
   const dispatch = useDispatch();
   const { token } = useSelector((state) => state.login);
   const { allDevices, users } = useSelector((state) => state.devices);
+
   useEffect(() => {
     dispatch(parseToken());
     dispatch(getDevices(token));
@@ -36,7 +37,12 @@ const DeviceManagementPage = () => {
             <AddIcon /> Add device
           </Button>
         </div>
-        <DeviceManagementTable data={allDevices} users={users} token={token} />
+        <DeviceManagementTable
+          data={allDevices}
+          users={users}
+          token={token}
+          username={user?.username}
+        />
       </Container>
       <EditForm open={open} onClose={setOpen} users={users} />
     </div>
