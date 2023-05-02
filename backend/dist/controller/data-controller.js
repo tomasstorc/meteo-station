@@ -42,7 +42,7 @@ router.get("/:id", isAuthenticated_1.default, isOwnerOrUser_1.default, (req, res
 router.post("/", isDeviceAuth_1.default, (req, res) => {
     req.body.data.forEach((data) => {
         const newData = new Data_1.default({
-            deviceid: data.deviceid,
+            deviceid: req.body.deviceid,
             temperature: data.temperature,
             humidity: data.humidity,
             date: data.date || new Date(),
@@ -53,8 +53,8 @@ router.post("/", isDeviceAuth_1.default, (req, res) => {
             if (!savedData)
                 res.status(400).json(new error_response_1.default("data not saved"));
         });
-        return res.status(201).json(new success_response_1.default("ok"));
     });
+    return res.status(201).json(new success_response_1.default("ok"));
 });
 //   let newData = new Data<IData>({
 //     deviceid: req.body.deviceid,
