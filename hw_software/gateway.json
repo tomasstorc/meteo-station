@@ -8,14 +8,6 @@
         "env": []
     },
     {
-        "id": "463aa84fa9713baa",
-        "type": "tab",
-        "label": "DataProcessing",
-        "disabled": false,
-        "info": "",
-        "env": []
-    },
-    {
         "id": "7c9bfcf79881fe54",
         "type": "tab",
         "label": "DataSending",
@@ -167,11 +159,13 @@
     {
         "id": "9397c6614a537120",
         "type": "ui_group",
-        "name": "Group 2",
+        "name": "Current data",
         "tab": "a050bcfd77d2a04a",
         "order": 1,
         "disp": true,
-        "width": 6
+        "width": "6",
+        "collapse": false,
+        "className": ""
     },
     {
         "id": "2999383859eb40b1",
@@ -207,6 +201,47 @@
         "sessionExpiry": ""
     },
     {
+        "id": "bd181960f9fbbc74",
+        "type": "ui_group",
+        "name": "Database",
+        "tab": "a050bcfd77d2a04a",
+        "order": 2,
+        "disp": true,
+        "width": "6",
+        "collapse": true,
+        "className": ""
+    },
+    {
+        "id": "4e5b16a9bf0afca8",
+        "type": "ui_spacer",
+        "z": "85a818509d3554aa",
+        "name": "spacer",
+        "group": "bd181960f9fbbc74",
+        "order": 2,
+        "width": 6,
+        "height": 1
+    },
+    {
+        "id": "03a90ba1902b656a",
+        "type": "ui_spacer",
+        "z": "85a818509d3554aa",
+        "name": "spacer",
+        "group": "bd181960f9fbbc74",
+        "order": 3,
+        "width": 6,
+        "height": 1
+    },
+    {
+        "id": "b649d3629581ad54",
+        "type": "ui_spacer",
+        "z": "85a818509d3554aa",
+        "name": "spacer",
+        "group": "bd181960f9fbbc74",
+        "order": 4,
+        "width": 6,
+        "height": 1
+    },
+    {
         "id": "1d1e29486d2abb58",
         "type": "serial in",
         "z": "9cc038cd8e0bff06",
@@ -225,7 +260,7 @@
         "type": "function",
         "z": "9cc038cd8e0bff06",
         "name": "DHT data",
-        "func": "let message = msg.payload.replace(\"{\", \"\").replace(\"}\", \"\");\nlet data = message.split(\";\");\n\nlet output = {};\n\noutput.temp = Number(data[0]);\noutput.hum = Number(data[1]);\noutput.count = Number(data[2]);\noutput.machine = data[3].replace(\"\\\"\", \"\\'\");\n\n\n// temp|hum|count|machineName\nreturn output;",
+        "func": "let message = msg.payload.replace(\"{\", \"\").replace(\"}\", \"\");\nlet data = message.split(\";\");\n\nlet output = {};\n\noutput.temp = Number(data[0]);\noutput.hum = Number(data[1]);\n\n\n// temp|hum\nreturn output;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -258,7 +293,7 @@
         "type": "function",
         "z": "9cc038cd8e0bff06",
         "name": "INSERT query",
-        "func": "// temp|hum|count|machine\nmsg.params = [msg.temp, msg.hum, msg.count, msg.machine];\n\nreturn msg;",
+        "func": "// temp|hum\nmsg.params = [msg.temp, msg.hum];\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -278,142 +313,10 @@
         "z": "9cc038cd8e0bff06",
         "mydb": "2999383859eb40b1",
         "sqlquery": "prepared",
-        "sql": "INSERT INTO data_from_node (temperature, humidity, count, machine)\nVALUES (?, ?, ?, ?)",
+        "sql": "INSERT INTO measured_data (temperature, humidity)\nVALUES (?, ?)",
         "name": "INSERT",
-        "x": 680,
+        "x": 700,
         "y": 180,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "f851d7ab5de7a8d3",
-        "type": "inject",
-        "z": "463aa84fa9713baa",
-        "name": "Start every 5 minutes",
-        "props": [
-            {
-                "p": "payload"
-            }
-        ],
-        "repeat": "300",
-        "crontab": "",
-        "once": true,
-        "onceDelay": "3",
-        "topic": "",
-        "payload": "",
-        "payloadType": "date",
-        "x": 140,
-        "y": 80,
-        "wires": [
-            [
-                "d072f2f1bc25ef40"
-            ]
-        ]
-    },
-    {
-        "id": "d072f2f1bc25ef40",
-        "type": "sqlite",
-        "z": "463aa84fa9713baa",
-        "mydb": "2999383859eb40b1",
-        "sqlquery": "fixed",
-        "sql": "SELECT * FROM data_from_node;",
-        "name": "SELECT node data",
-        "x": 390,
-        "y": 80,
-        "wires": [
-            [
-                "2faa3ba19c80a8b4"
-            ]
-        ]
-    },
-    {
-        "id": "2faa3ba19c80a8b4",
-        "type": "switch",
-        "z": "463aa84fa9713baa",
-        "name": "Check if data",
-        "property": "payload",
-        "propertyType": "msg",
-        "rules": [
-            {
-                "t": "nempty"
-            }
-        ],
-        "checkall": "false",
-        "repair": false,
-        "outputs": 1,
-        "x": 170,
-        "y": 220,
-        "wires": [
-            [
-                "a13b250096f8dee1"
-            ]
-        ]
-    },
-    {
-        "id": "a13b250096f8dee1",
-        "type": "function",
-        "z": "463aa84fa9713baa",
-        "name": "caltulate avg",
-        "func": "let allData = msg.payload;\nlet temp;\nlet tSum = 0;\nlet hum;\nlet hSum = 0;\nlet count = 0;\nlet output = {};\n\nfor (let i = 0; i < allData.length; i++) {\n    let row = allData[i];\n    tSum += Number(row.temperature);\n    hSum += Number(row.humidity);\n    count++; \n}\n\n\noutput.temp = (tSum / count).toFixed(2);\noutput.hum = (hSum / count).toFixed(2);\n\n\nreturn output;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 370,
-        "y": 300,
-        "wires": [
-            [
-                "979000026bbff8b9"
-            ]
-        ]
-    },
-    {
-        "id": "979000026bbff8b9",
-        "type": "function",
-        "z": "463aa84fa9713baa",
-        "name": "INSERT query",
-        "func": "// temp|hum\nmsg.params = [msg.temp, msg.hum];\n\nreturn msg;\n",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 560,
-        "y": 300,
-        "wires": [
-            [
-                "c3c38f6bf54957b7"
-            ]
-        ]
-    },
-    {
-        "id": "c3c38f6bf54957b7",
-        "type": "sqlite",
-        "z": "463aa84fa9713baa",
-        "mydb": "2999383859eb40b1",
-        "sqlquery": "prepared",
-        "sql": "INSERT INTO data_for_call (temperature, humidity)\nVALUES (?, ?)",
-        "name": "INSERT",
-        "x": 740,
-        "y": 300,
-        "wires": [
-            [
-                "3d54864d73a9107a"
-            ]
-        ]
-    },
-    {
-        "id": "3d54864d73a9107a",
-        "type": "sqlite",
-        "z": "463aa84fa9713baa",
-        "mydb": "2999383859eb40b1",
-        "sqlquery": "fixed",
-        "sql": "DELETE FROM data_from_node;",
-        "name": "DELETE",
-        "x": 360,
-        "y": 420,
         "wires": [
             []
         ]
@@ -436,7 +339,7 @@
         "payload": "",
         "payloadType": "date",
         "x": 130,
-        "y": 80,
+        "y": 40,
         "wires": [
             [
                 "30ac522761cec396"
@@ -449,13 +352,14 @@
         "z": "7c9bfcf79881fe54",
         "mydb": "2999383859eb40b1",
         "sqlquery": "fixed",
-        "sql": "SELECT id, temperature, humidity, `timestamp` \nFROM data_for_call\nWHERE sendAway=0\nORDER BY `timestamp` ASC\nLIMIT 15;",
+        "sql": "SELECT id, temperature, humidity, `timestamp` \nFROM measured_data\nWHERE sentAway=0\nORDER BY `timestamp` ASC\nLIMIT 100;",
         "name": "SELECT data for call",
         "x": 380,
         "y": 80,
         "wires": [
             [
-                "085c442d3daef2f2"
+                "085c442d3daef2f2",
+                "dfcf0229b8f49585"
             ]
         ]
     },
@@ -524,8 +428,8 @@
         "id": "a0c665989113e220",
         "type": "function",
         "z": "7c9bfcf79881fe54",
-        "name": "Prepare data from DB",
-        "func": "let db_data = msg.payload;\nlet ids = [];\nlet body = [];\n\ndb_data.forEach(function (arrayObject) {\n    ids.push(arrayObject.id);\n    body.push({temperature: arrayObject.temperature,\n        humidity: arrayObject.humidity\n    })  //timestamp: arrayObject.timestamp\n});\n\nflow.set(\"ids\", ids);\n\nreturn {payload: body};",
+        "name": "Prepare data from call",
+        "func": "const db_data = msg.payload;\n\nconst groupedArray = [];\nlet currentGroup = [];\n\nfor (let i = 0; i < db_data.length; i++) {\n    const currentTimestamp = db_data[i].timestamp;\n\n    // Round the current timestamp down to the nearest 5-minute interval\n    const currentMinute = new Date(currentTimestamp);\n    currentMinute.setSeconds(0, 0);\n\n    const minuteValue = Math.floor(currentMinute.getMinutes() / 5) * 5;\n    currentMinute.setMinutes(minuteValue);\n\n    // Check if the current object belongs to the current group or a new group\n    if (currentGroup.length === 0 || currentMinute.getTime() === new Date(currentGroup[0].timestamp).setSeconds(0, 0)) {\n        currentGroup.push(db_data[i]);\n    } else {\n        groupedArray.push(currentGroup);\n        currentGroup = [db_data[i]];\n    }\n}\n\n// Add the last group to the grouped array\nif (currentGroup.length > 0) {\n    groupedArray.push(currentGroup);\n}\n\nlet data_for_body = [];\n\ngroupedArray.forEach(function (group){\n    let sumTemp = 0;\n    let sumHum = 0;\n    let count = 0;\n    let lastItem = group[group.length - 1];\n    let ts = lastItem.timestamp;\n\n    group.forEach(function (oneRow) {\n        sumTemp += oneRow.temperature;\n        sumHum += oneRow.humidity;\n        count++;\n    }); \n    data_for_body.push({\n        temperature: (sumTemp / count).toFixed(2),\n        humidity: (sumHum / count).toFixed(2),\n        date: new Date(ts).toISOString()\n    });\n});\n\n\nlet ids = [];\n\ndb_data.forEach(function (arrayObject) {\n    ids.push(arrayObject.id);\n});\n\nflow.set(\"ids\", ids);\n\nreturn {payload: data_for_body};",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -535,7 +439,8 @@
         "y": 200,
         "wires": [
             [
-                "7e6ebc21f1c6811c"
+                "7e6ebc21f1c6811c",
+                "676a0fe9442f5f5f"
             ]
         ]
     },
@@ -579,7 +484,8 @@
         "y": 320,
         "wires": [
             [
-                "cfdc2755cf0730ec"
+                "cfdc2755cf0730ec",
+                "6b590c7394b9a359"
             ]
         ]
     },
@@ -588,7 +494,7 @@
         "type": "function",
         "z": "7c9bfcf79881fe54",
         "name": "UPDATE query",
-        "func": "let newMsg = flow.get(\"ids\");\nlet query = `UPDATE data_for_call SET sendAway = 1 WHERE id IN(${ newMsg });`\n\nreturn { topic: query };\n",
+        "func": "let newMsg = flow.get(\"ids\");\nlet query = `UPDATE measured_data SET sentAway = 1 WHERE id IN(${ newMsg });`\n\nreturn { topic: query };\n",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -675,7 +581,7 @@
         "type": "debug",
         "z": "7c9bfcf79881fe54",
         "name": "params",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -702,6 +608,64 @@
         "statusType": "auto",
         "x": 1160,
         "y": 380,
+        "wires": []
+    },
+    {
+        "id": "6b590c7394b9a359",
+        "type": "link out",
+        "z": "7c9bfcf79881fe54",
+        "name": "Status code 201",
+        "mode": "link",
+        "links": [],
+        "x": 565,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "3efeb4b9a1267a94",
+        "type": "link in",
+        "z": "7c9bfcf79881fe54",
+        "name": "Send more data",
+        "links": [],
+        "x": 225,
+        "y": 120,
+        "wires": [
+            [
+                "30ac522761cec396"
+            ]
+        ]
+    },
+    {
+        "id": "676a0fe9442f5f5f",
+        "type": "debug",
+        "z": "7c9bfcf79881fe54",
+        "name": "body",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 570,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "dfcf0229b8f49585",
+        "type": "debug",
+        "z": "7c9bfcf79881fe54",
+        "name": "debug 2",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 580,
+        "y": 20,
         "wires": []
     },
     {
@@ -735,7 +699,7 @@
         "z": "8a5a3f3fa3c39a4b",
         "mydb": "2999383859eb40b1",
         "sqlquery": "fixed",
-        "sql": "DELETE FROM data_for_call\nWHERE sendAway=1 AND timestamp<=datetime('now', '-1 day');",
+        "sql": "DELETE FROM measured_data\nWHERE sentAway=1 AND timestamp<=datetime('now', '-1 day');",
         "name": "DELETE sent data",
         "x": 330,
         "y": 80,
@@ -750,7 +714,7 @@
         "type": "debug",
         "z": "8a5a3f3fa3c39a4b",
         "name": "debug 1",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -782,8 +746,8 @@
         "type": "function",
         "z": "85a818509d3554aa",
         "name": "parseDataForCheck",
-        "func": "let output = msg;\n\nlet temp = {}\nlet hum = {}\nlet count = {}\n\ntemp.payload = output.temp\nhum.payload = output.hum\ncount.payload = output.count\n\nreturn [temp, hum, count];",
-        "outputs": 3,
+        "func": "let output = msg;\n\nlet temp = {}\nlet hum = {}\n\ntemp.payload = output.temp\nhum.payload = output.hum\n\nreturn [temp, hum];",
+        "outputs": 2,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
@@ -796,9 +760,6 @@
             ],
             [
                 "5c8004d068a919f6"
-            ],
-            [
-                "f91734e0ff966567"
             ]
         ]
     },
@@ -859,31 +820,60 @@
         "wires": []
     },
     {
-        "id": "f91734e0ff966567",
-        "type": "ui_gauge",
+        "id": "5194a35266dc90bc",
+        "type": "inject",
         "z": "85a818509d3554aa",
-        "name": "CountInCall",
-        "group": "9397c6614a537120",
-        "order": 3,
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "10",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 230,
+        "y": 340,
+        "wires": [
+            [
+                "79b70fbe593b2f72"
+            ]
+        ]
+    },
+    {
+        "id": "79b70fbe593b2f72",
+        "type": "sqlite",
+        "z": "85a818509d3554aa",
+        "mydb": "2999383859eb40b1",
+        "sqlquery": "fixed",
+        "sql": "SELECT * FROM measured_data;",
+        "name": "SELECT node data",
+        "x": 450,
+        "y": 340,
+        "wires": [
+            [
+                "abcc67bd901abcf6"
+            ]
+        ]
+    },
+    {
+        "id": "abcc67bd901abcf6",
+        "type": "ui_table",
+        "z": "85a818509d3554aa",
+        "group": "bd181960f9fbbc74",
+        "name": "",
+        "order": 1,
         "width": 6,
         "height": 4,
-        "gtype": "gage",
-        "title": "CountInCall",
-        "label": "units",
-        "format": "{{value}}",
-        "min": 0,
-        "max": 10,
-        "colors": [
-            "#d43008",
-            "#26e600",
-            "#ca3838"
-        ],
-        "seg1": "",
-        "seg2": "",
-        "diff": false,
-        "className": "",
-        "x": 610,
-        "y": 220,
+        "columns": [],
+        "outputs": 0,
+        "cts": false,
+        "x": 690,
+        "y": 340,
         "wires": []
     }
 ]
