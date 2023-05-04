@@ -415,8 +415,8 @@
                 "valueValue": "ff10bd4f5b8501c5d4f99bd498799dfaf121bcefd5f0028fb20094825f44bb54"
             }
         ],
-        "x": 900,
-        "y": 200,
+        "x": 1000,
+        "y": 220,
         "wires": [
             [
                 "c77c807196443962",
@@ -429,18 +429,18 @@
         "type": "function",
         "z": "7c9bfcf79881fe54",
         "name": "Prepare data from call",
-        "func": "const db_data = msg.payload;\n\nconst groupedArray = [];\nlet currentGroup = [];\n\nfor (let i = 0; i < db_data.length; i++) {\n    const currentTimestamp = db_data[i].timestamp;\n\n    // Round the current timestamp down to the nearest 5-minute interval\n    const currentMinute = new Date(currentTimestamp);\n    currentMinute.setSeconds(0, 0);\n\n    const minuteValue = Math.floor(currentMinute.getMinutes() / 5) * 5;\n    currentMinute.setMinutes(minuteValue);\n\n    // Check if the current object belongs to the current group or a new group\n    if (currentGroup.length === 0 || currentMinute.getTime() === new Date(currentGroup[0].timestamp).setSeconds(0, 0)) {\n        currentGroup.push(db_data[i]);\n    } else {\n        groupedArray.push(currentGroup);\n        currentGroup = [db_data[i]];\n    }\n}\n\n// Add the last group to the grouped array\nif (currentGroup.length > 0) {\n    groupedArray.push(currentGroup);\n}\n\nlet data_for_body = [];\n\ngroupedArray.forEach(function (group){\n    let sumTemp = 0;\n    let sumHum = 0;\n    let count = 0;\n    let lastItem = group[group.length - 1];\n    let ts = lastItem.timestamp;\n\n    group.forEach(function (oneRow) {\n        sumTemp += oneRow.temperature;\n        sumHum += oneRow.humidity;\n        count++;\n    }); \n    data_for_body.push({\n        temperature: (sumTemp / count).toFixed(2),\n        humidity: (sumHum / count).toFixed(2),\n        date: new Date(ts).toISOString()\n    });\n});\n\n\nlet ids = [];\n\ndb_data.forEach(function (arrayObject) {\n    ids.push(arrayObject.id);\n});\n\nflow.set(\"ids\", ids);\n\nreturn {payload: data_for_body};",
+        "func": "const groupByInterval = (data, intervalMinutes) => {\n    let currentMinute = new Date(data[0].timestamp).getTime();\n    let groups = [[]];\n    for (const item of data) {\n        const itemMinute = new Date(item.timestamp).getTime();\n        const minuteDiff = (itemMinute - currentMinute) / (1000 * 60);\n        if (minuteDiff >= intervalMinutes) {\n            currentMinute = itemMinute;\n            groups.push([]);\n        }\n        groups[groups.length - 1].push(item);\n    }\n    return groups;\n};\n\nconst input = msg.payload;\nconst groupedArray = groupByInterval(input, 5);\nlet data_for_body = [];\n\ngroupedArray.forEach(function (group) {\n    let sumTemp = 0;\n    let sumHum = 0;\n    let count = 0;\n    let lastItem = group[group.length - 1];\n    let ts = lastItem.timestamp;\n    group.forEach(function (oneRow) {\n        sumTemp += oneRow.temperature;\n        sumHum += oneRow.humidity;\n        count++;\n    });\n    data_for_body.push({\n        temperature: (sumTemp / count).toFixed(2),\n        humidity: (sumHum / count).toFixed(2),\n        date: new Date(ts).toISOString(),\n    });\n});\nlet ids = [];\n\n\ninput.forEach(function (arrayObject) {\n    ids.push(arrayObject.id);\n});\nflow.set(\"ids\", ids);\n\n\nreturn { payload: data_for_body };\n",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 340,
-        "y": 200,
+        "x": 500,
+        "y": 220,
         "wires": [
             [
-                "7e6ebc21f1c6811c",
-                "676a0fe9442f5f5f"
+                "676a0fe9442f5f5f",
+                "7e6ebc21f1c6811c"
             ]
         ]
     },
@@ -455,8 +455,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 550,
-        "y": 200,
+        "x": 690,
+        "y": 220,
         "wires": [
             [
                 "07e8b7d2a70b28d8"
@@ -480,12 +480,11 @@
         "checkall": "true",
         "repair": false,
         "outputs": 1,
-        "x": 440,
-        "y": 320,
+        "x": 80,
+        "y": 360,
         "wires": [
             [
-                "cfdc2755cf0730ec",
-                "6b590c7394b9a359"
+                "cfdc2755cf0730ec"
             ]
         ]
     },
@@ -500,12 +499,11 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 700,
-        "y": 320,
+        "x": 220,
+        "y": 440,
         "wires": [
             [
-                "bf8917b9a3f32df8",
-                "55db868d5509fd19"
+                "bf8917b9a3f32df8"
             ]
         ]
     },
@@ -517,30 +515,14 @@
         "sqlquery": "msg.topic",
         "sql": "UPDATE data_for_call \nSET sendAway = 1 \nWHERE id IN($data);",
         "name": "UPDATE",
-        "x": 960,
-        "y": 420,
+        "x": 360,
+        "y": 540,
         "wires": [
             [
-                "29565c92b4b37d08"
+                "29565c92b4b37d08",
+                "30ac522761cec396"
             ]
         ]
-    },
-    {
-        "id": "090279738a9c1a90",
-        "type": "debug",
-        "z": "7c9bfcf79881fe54",
-        "name": "body",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "true",
-        "targetType": "full",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 870,
-        "y": 140,
-        "wires": []
     },
     {
         "id": "08a9a42398952f27",
@@ -555,7 +537,7 @@
         "targetType": "full",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1080,
+        "x": 1020,
         "y": 160,
         "wires": []
     },
@@ -567,31 +549,13 @@
         "property": "payload",
         "action": "obj",
         "pretty": false,
-        "x": 710,
-        "y": 200,
+        "x": 830,
+        "y": 220,
         "wires": [
             [
-                "e94aca6c6a20370e",
-                "090279738a9c1a90"
+                "e94aca6c6a20370e"
             ]
         ]
-    },
-    {
-        "id": "55db868d5509fd19",
-        "type": "debug",
-        "z": "7c9bfcf79881fe54",
-        "name": "params",
-        "active": false,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "true",
-        "targetType": "full",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 960,
-        "y": 320,
-        "wires": []
     },
     {
         "id": "29565c92b4b37d08",
@@ -606,34 +570,9 @@
         "targetType": "full",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1160,
-        "y": 380,
+        "x": 580,
+        "y": 540,
         "wires": []
-    },
-    {
-        "id": "6b590c7394b9a359",
-        "type": "link out",
-        "z": "7c9bfcf79881fe54",
-        "name": "Status code 201",
-        "mode": "link",
-        "links": [],
-        "x": 565,
-        "y": 400,
-        "wires": []
-    },
-    {
-        "id": "3efeb4b9a1267a94",
-        "type": "link in",
-        "z": "7c9bfcf79881fe54",
-        "name": "Send more data",
-        "links": [],
-        "x": 225,
-        "y": 120,
-        "wires": [
-            [
-                "30ac522761cec396"
-            ]
-        ]
     },
     {
         "id": "676a0fe9442f5f5f",
@@ -648,23 +587,24 @@
         "targetType": "full",
         "statusVal": "",
         "statusType": "auto",
-        "x": 570,
-        "y": 160,
+        "x": 670,
+        "y": 180,
         "wires": []
     },
     {
         "id": "dfcf0229b8f49585",
         "type": "debug",
         "z": "7c9bfcf79881fe54",
-        "name": "debug 2",
+        "name": "Selected data",
         "active": true,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
-        "complete": "false",
+        "complete": "payload",
+        "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 580,
+        "x": 600,
         "y": 20,
         "wires": []
     },
