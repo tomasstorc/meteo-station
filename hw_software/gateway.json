@@ -520,7 +520,7 @@
         "wires": [
             [
                 "29565c92b4b37d08",
-                "30ac522761cec396"
+                "6debfb144138fd24"
             ]
         ]
     },
@@ -607,6 +607,29 @@
         "x": 600,
         "y": 20,
         "wires": []
+    },
+    {
+        "id": "6debfb144138fd24",
+        "type": "switch",
+        "z": "7c9bfcf79881fe54",
+        "name": "Check if UPDATE ok",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "empty"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 220,
+        "y": 180,
+        "wires": [
+            [
+                "30ac522761cec396"
+            ]
+        ]
     },
     {
         "id": "b1b13d7e0aafc0a4",
