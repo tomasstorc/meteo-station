@@ -342,7 +342,7 @@
         "y": 40,
         "wires": [
             [
-                "30ac522761cec396"
+                "d6273d450ee85bf7"
             ]
         ]
     },
@@ -354,8 +354,8 @@
         "sqlquery": "fixed",
         "sql": "SELECT id, temperature, humidity, `timestamp` \nFROM measured_data\nWHERE sentAway=0\nORDER BY `timestamp` ASC\nLIMIT 100;",
         "name": "SELECT data for call",
-        "x": 380,
-        "y": 80,
+        "x": 520,
+        "y": 260,
         "wires": [
             [
                 "085c442d3daef2f2",
@@ -378,8 +378,8 @@
         "checkall": "false",
         "repair": false,
         "outputs": 1,
-        "x": 590,
-        "y": 80,
+        "x": 750,
+        "y": 260,
         "wires": [
             [
                 "a0c665989113e220"
@@ -415,8 +415,8 @@
                 "valueValue": "ff10bd4f5b8501c5d4f99bd498799dfaf121bcefd5f0028fb20094825f44bb54"
             }
         ],
-        "x": 1000,
-        "y": 220,
+        "x": 1360,
+        "y": 360,
         "wires": [
             [
                 "c77c807196443962",
@@ -429,17 +429,16 @@
         "type": "function",
         "z": "7c9bfcf79881fe54",
         "name": "Prepare data from call",
-        "func": "const groupByInterval = (data, intervalMinutes) => {\n    let currentMinute = new Date(data[0].timestamp).getTime();\n    let groups = [[]];\n    for (const item of data) {\n        const itemMinute = new Date(item.timestamp).getTime();\n        const minuteDiff = (itemMinute - currentMinute) / (1000 * 60);\n        if (minuteDiff >= intervalMinutes) {\n            currentMinute = itemMinute;\n            groups.push([]);\n        }\n        groups[groups.length - 1].push(item);\n    }\n    return groups;\n};\n\nconst input = msg.payload;\nconst groupedArray = groupByInterval(input, 5);\nlet data_for_body = [];\n\ngroupedArray.forEach(function (group) {\n    let sumTemp = 0;\n    let sumHum = 0;\n    let count = 0;\n    let lastItem = group[group.length - 1];\n    let ts = lastItem.timestamp;\n    group.forEach(function (oneRow) {\n        sumTemp += oneRow.temperature;\n        sumHum += oneRow.humidity;\n        count++;\n    });\n    var tzoffset = (new Date()).getTimezoneOffset() * 60000;\n    var localISOTime = (new Date(Date.now() - tzoffset)).toISOString().slice(0, -1);\n    data_for_body.push({\n        temperature: (sumTemp / count).toFixed(2),\n        humidity: (sumHum / count).toFixed(2),\n        date: localISOTime,\n    });\n});\nlet ids = [];\n\n\ninput.forEach(function (arrayObject) {\n    ids.push(arrayObject.id);\n});\nflow.set(\"ids\", ids);\n\n\nreturn { payload: data_for_body };\n",
+        "func": "const groupByInterval = (data, intervalMinutes) => {\n    let currentMinute = new Date(data[0].timestamp).getTime();\n    let groups = [[]];\n    for (const item of data) {\n        const itemMinute = new Date(item.timestamp).getTime();\n        const minuteDiff = (itemMinute - currentMinute) / (1000 * 60);\n        if (minuteDiff >= intervalMinutes) {\n            currentMinute = itemMinute;\n            groups.push([]);\n        }\n        groups[groups.length - 1].push(item);\n    }\n    return groups;\n};\n\nconst input = msg.payload;\nconst groupedArray = groupByInterval(input, 5);\nlet data_for_body = [];\n\ngroupedArray.forEach(function (group) {\n    let sumTemp = 0;\n    let sumHum = 0;\n    let count = 0;\n    let lastItem = group[group.length - 1];\n    let ts = (new Date(lastItem.timestamp)).getTime();\n    group.forEach(function (oneRow) {\n        sumTemp += oneRow.temperature;\n        sumHum += oneRow.humidity;\n        count++;\n    });\n    var tzoffset = (new Date()).getTimezoneOffset() * 60000;\n    var localISOTime = (new Date(ts - tzoffset)).toISOString().slice(0, -1);\n    data_for_body.push({\n        temperature: (sumTemp / count).toFixed(2),\n        humidity: (sumHum / count).toFixed(2),\n        date: localISOTime,\n    });\n});\nlet ids = [];\n\n\ninput.forEach(function (arrayObject) {\n    ids.push(arrayObject.id);\n});\nflow.set(\"ids\", ids);\n\n\nreturn { payload: data_for_body };\n",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 500,
-        "y": 220,
+        "x": 860,
+        "y": 360,
         "wires": [
             [
-                "676a0fe9442f5f5f",
                 "7e6ebc21f1c6811c"
             ]
         ]
@@ -455,11 +454,12 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 690,
-        "y": 220,
+        "x": 1050,
+        "y": 360,
         "wires": [
             [
-                "07e8b7d2a70b28d8"
+                "07e8b7d2a70b28d8",
+                "676a0fe9442f5f5f"
             ]
         ]
     },
@@ -480,8 +480,8 @@
         "checkall": "true",
         "repair": false,
         "outputs": 1,
-        "x": 80,
-        "y": 360,
+        "x": 120,
+        "y": 460,
         "wires": [
             [
                 "cfdc2755cf0730ec"
@@ -499,8 +499,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 220,
-        "y": 440,
+        "x": 200,
+        "y": 540,
         "wires": [
             [
                 "bf8917b9a3f32df8"
@@ -537,8 +537,8 @@
         "targetType": "full",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1020,
-        "y": 160,
+        "x": 1460,
+        "y": 300,
         "wires": []
     },
     {
@@ -549,8 +549,8 @@
         "property": "payload",
         "action": "obj",
         "pretty": false,
-        "x": 830,
-        "y": 220,
+        "x": 1190,
+        "y": 360,
         "wires": [
             [
                 "e94aca6c6a20370e"
@@ -587,8 +587,8 @@
         "targetType": "full",
         "statusVal": "",
         "statusType": "auto",
-        "x": 670,
-        "y": 180,
+        "x": 1210,
+        "y": 300,
         "wires": []
     },
     {
@@ -604,8 +604,8 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 600,
-        "y": 20,
+        "x": 760,
+        "y": 200,
         "wires": []
     },
     {
@@ -623,8 +623,130 @@
         "checkall": "true",
         "repair": false,
         "outputs": 1,
-        "x": 220,
-        "y": 180,
+        "x": 280,
+        "y": 260,
+        "wires": [
+            [
+                "30ac522761cec396"
+            ]
+        ]
+    },
+    {
+        "id": "d6273d450ee85bf7",
+        "type": "ping",
+        "z": "7c9bfcf79881fe54",
+        "protocol": "Automatic",
+        "mode": "triggered",
+        "name": "Try internet connection",
+        "host": "8.8.8.8",
+        "timer": "20",
+        "inputs": 1,
+        "x": 400,
+        "y": 40,
+        "wires": [
+            [
+                "fdd156c02bd96481",
+                "2d9aa0b0be8103b6"
+            ]
+        ]
+    },
+    {
+        "id": "fe63e715e09897bc",
+        "type": "ping",
+        "z": "7c9bfcf79881fe54",
+        "protocol": "Automatic",
+        "mode": "triggered",
+        "name": "Try app availability",
+        "host": "meteo-station.azurewebsites.net",
+        "timer": "20",
+        "inputs": 1,
+        "x": 910,
+        "y": 40,
+        "wires": [
+            [
+                "0d20e2a6d841a5c9",
+                "9aba5a64d54f3381"
+            ]
+        ]
+    },
+    {
+        "id": "fdd156c02bd96481",
+        "type": "debug",
+        "z": "7c9bfcf79881fe54",
+        "name": "Google timeout",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 620,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "0d20e2a6d841a5c9",
+        "type": "debug",
+        "z": "7c9bfcf79881fe54",
+        "name": "Web app timeout",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1170,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "2d9aa0b0be8103b6",
+        "type": "switch",
+        "z": "7c9bfcf79881fe54",
+        "name": "Check if ok",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "neq",
+                "v": "0",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 690,
+        "y": 40,
+        "wires": [
+            [
+                "fe63e715e09897bc"
+            ]
+        ]
+    },
+    {
+        "id": "9aba5a64d54f3381",
+        "type": "switch",
+        "z": "7c9bfcf79881fe54",
+        "name": "Check if ok",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "neq",
+                "v": "0",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 1150,
+        "y": 40,
         "wires": [
             [
                 "30ac522761cec396"
