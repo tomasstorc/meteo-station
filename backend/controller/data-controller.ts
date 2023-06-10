@@ -18,6 +18,7 @@ const getName = (id: string) => {
     if (err) return "error";
     return foundData.name;
   });
+};
 
 router.get(
   "/:id",
