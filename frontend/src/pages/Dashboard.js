@@ -19,7 +19,7 @@ import Loading from "../components/Loading";
 const Dashboard = () => {
   const dispatch = useDispatch();
   const { token } = useSelector((state) => state.login);
-  const { data, loading } = useSelector((state) => state?.data);
+  const { data, loading, name, lastData } = useSelector((state) => state?.data);
   const { id } = useParams();
   const now = new Date();
   const [parameters, setParameters] = useState({
@@ -48,12 +48,13 @@ const Dashboard = () => {
     parameters?.dateFrom,
     parameters?.dateTo,
   ]);
+
   if (loading) return <Loading />;
   return (
     <div className="row">
       <Navigation className="col" />
       <Container className="col mt-3">
-        <Typography variant="h4"> Dashboard</Typography>
+        <Typography variant="h4"> Dashboard - {name}</Typography>
         <div className="row">
           <div className="col">
             <FormControl sx={{ minWidth: 200 }}>
@@ -71,13 +72,14 @@ const Dashboard = () => {
                 name="granularity"
                 label="Data granularity"
               >
-                <MenuItem value={1}>1</MenuItem>
-                <MenuItem value={5}>5</MenuItem>
-                <MenuItem value={10}>10</MenuItem>
-                <MenuItem value={30}>30</MenuItem>
+                <MenuItem value={1}>1 minuta</MenuItem>
+                <MenuItem value={5}>5 minut</MenuItem>
+                <MenuItem value={10}>10 minut</MenuItem>
+                <MenuItem value={30}>30 minut</MenuItem>
               </Select>
             </FormControl>
           </div>
+
           <div className="d-flex justify-content-end col">
             <div className="fieldset">
               <h1 className="legend">Date and time from</h1>
@@ -103,6 +105,7 @@ const Dashboard = () => {
                 max={parameters?.dateTo}
               />
             </div>
+
             <div className="fieldset">
               <h1 className="legend">Date and time to</h1>
 
@@ -130,6 +133,8 @@ const Dashboard = () => {
             </div>
           </div>
         </div>
+        Aktuální teplota: {lastData?.temperature}°C Aktuální vlhkost:{" "}
+        {lastData?.humidity}%
         {data?.length === 0 || data === undefined ? (
           <div className="text-center bg-white p-3 mt-3">
             There are no records to display

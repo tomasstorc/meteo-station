@@ -1,10 +1,4 @@
-import {
-  Card,
-  CardActionArea,
-  CardContent,
-  CardMedia,
-  Typography,
-} from "@mui/material";
+import { Card, CardActionArea, CardMedia, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import React from "react";
 import { Link } from "react-router-dom";
@@ -22,17 +16,7 @@ const DeviceItem = ({ name, data, id }) => {
                 image="https://cdn-icons-png.flaticon.com/512/6074/6074032.png"
                 alt="Live from space album cover"
               />
-              <Box sx={{ display: "flex", flexDirection: "column" }}>
-                <CardContent sx={{ flex: "1 0 auto" }}>
-                  <Typography
-                    component="div"
-                    variant="h5"
-                    color="text.secondary"
-                  >
-                    {data}
-                  </Typography>
-                </CardContent>
-              </Box>
+              <Box sx={{ display: "flex", flexDirection: "column" }}></Box>
             </Box>
             <Typography variant="h6">{name}</Typography>
           </CardActionArea>
