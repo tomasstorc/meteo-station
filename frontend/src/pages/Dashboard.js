@@ -70,12 +70,12 @@ const Dashboard = () => {
                 id="granularity"
                 value={parameters?.granularity}
                 name="granularity"
-                label="Data granularity - minutes"
+                label="Data granularity"
               >
-                <MenuItem value={1}>1</MenuItem>
-                <MenuItem value={5}>5</MenuItem>
-                <MenuItem value={10}>10</MenuItem>
-                <MenuItem value={30}>30</MenuItem>
+                <MenuItem value={1}>1 minuta</MenuItem>
+                <MenuItem value={5}>5 minut</MenuItem>
+                <MenuItem value={10}>10 minut</MenuItem>
+                <MenuItem value={30}>30 minut</MenuItem>
               </Select>
             </FormControl>
           </div>
