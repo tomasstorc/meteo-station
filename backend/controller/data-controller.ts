@@ -46,7 +46,7 @@ router.get(
         return res.status(200).json(
           new SuccessResponse("ok", {
             data: finalData,
-            actualTemp: finalData[0].temperature,
+            lastData: finalData[finalData.length - 1],
           })
         );
       }
