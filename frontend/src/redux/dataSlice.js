@@ -2,6 +2,8 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   data: [],
+  name: "",
+  lastData: {},
   loading: false,
   errorMsg: undefined,
 };
@@ -36,6 +38,8 @@ export const dataSlice = createSlice({
     [getData.fulfilled]: (state, action) => {
       state.loading = false;
       state.data = action.payload.data?.data;
+      state.name = action.payload.data?.name;
+      state.lastData = action.payload.data?.lastData;
     },
   },
 });
