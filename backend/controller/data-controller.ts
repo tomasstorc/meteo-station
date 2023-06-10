@@ -9,8 +9,15 @@ import ErrorResponse from "../response/error-response";
 import isOwnerOrUser from "../middleware/isOwnerOrUser";
 import processData from "../utils/processData";
 import convertToLocaleString from "../utils/covertToLocaleString";
+import Device from "../model/Device";
 
 const router = express.Router();
+
+const getName = (id: string) => {
+  Device.findById(id).exec((err: CallbackError | undefined, foundData: any) => {
+    if (err) return "error";
+    return foundData.name;
+  });
 
 router.get(
   "/:id",
@@ -46,7 +53,8 @@ router.get(
         return res.status(200).json(
           new SuccessResponse("ok", {
             data: finalData,
-            actualTemp: finalData[0].temperature,
+            lastData: finalData[finalData.length - 1],
+            name: getName(req.params.id),
           })
         );
       }
