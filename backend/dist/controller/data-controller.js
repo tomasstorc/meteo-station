@@ -12,7 +12,15 @@ const error_response_1 = __importDefault(require("../response/error-response"));
 const isOwnerOrUser_1 = __importDefault(require("../middleware/isOwnerOrUser"));
 const processData_1 = __importDefault(require("../utils/processData"));
 const covertToLocaleString_1 = __importDefault(require("../utils/covertToLocaleString"));
+const Device_1 = __importDefault(require("../model/Device"));
 const router = express_1.default.Router();
+const getName = (id) => {
+    Device_1.default.findById(id).exec((err, foundData) => {
+        if (err)
+            return "error";
+        return foundData.name;
+    });
+};
 router.get("/:id", isAuthenticated_1.default, isOwnerOrUser_1.default, (req, res) => {
     console.log(new Date(req.query.dateFrom), req.query.dateTo);
     Data_1.default.find({
@@ -35,7 +43,8 @@ router.get("/:id", isAuthenticated_1.default, isOwnerOrUser_1.default, (req, res
         finalData = (0, covertToLocaleString_1.default)(finalData);
         return res.status(200).json(new success_response_1.default("ok", {
             data: finalData,
-            actualTemp: finalData[0].temperature,
+            lastData: finalData[finalData.length - 1],
+            name: getName(req.params.id),
         }));
     });
 });

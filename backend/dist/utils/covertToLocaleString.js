@@ -12,7 +12,7 @@ function convertToLocaleString(data) {
     });
     // sort data by date
     finalData.sort((a, b) => {
-        return new Date(b.date).getTime() - new Date(a.date).getTime();
+        return new Date(a.date).getTime() - new Date(b.date).getTime();
     });
     return finalData;
 }
