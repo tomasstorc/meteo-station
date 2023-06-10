@@ -10,22 +10,21 @@ import isOwnerOrUser from "../middleware/isOwnerOrUser";
 import processData from "../utils/processData";
 import convertToLocaleString from "../utils/covertToLocaleString";
 import Device from "../model/Device";
-
 const router = express.Router();
+let name = "";
+const getName = async (id: string) => {
+  const name = await Device.findById(id).exec();
 
-const getName = (id: string) => {
-  Device.findById(id).exec((err: CallbackError | undefined, foundData: any) => {
-    if (err) return "error";
-    return foundData.name;
-  });
+  return name?.name;
 };
 
 router.get(
   "/:id",
   isAuthenticated,
   isOwnerOrUser,
-  (req: Request, res: Response) => {
-    console.log(new Date(req.query.dateFrom as string), req.query.dateTo);
+  async (req: Request, res: Response) => {
+    const finalName = await getName(req.params.id);
+    console.log(finalName);
     Data.find(
       {
         deviceid: req.params.id,
@@ -43,8 +42,6 @@ router.get(
         if (foundData.length === 0)
           return res.status(200).json(new SuccessResponse("No data found"));
 
-        console.log(foundData);
-
         let finalData = processData(
           foundData,
           req.query.granularity ? +req.query.granularity : 5
@@ -55,7 +52,7 @@ router.get(
           new SuccessResponse("ok", {
             data: finalData,
             lastData: finalData[finalData.length - 1],
-            name: getName(req.params.id),
+            name: finalName,
           })
         );
       }
