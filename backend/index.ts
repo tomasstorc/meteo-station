@@ -36,7 +36,7 @@ app.get("*", (req, res) => {
 });
 
 dbConnect();
-if (process.env.NODE_ENV !== "production") dbSeed();
+// if (process.env.NODE_ENV !== "production") dbSeed();
 app.listen(port, () => {
   logger.info(`server running at port ${port}`);
 });
