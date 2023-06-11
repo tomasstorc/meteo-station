@@ -135,8 +135,8 @@ const Dashboard = () => {
             </div>
           </div>
         </div>
-        Aktuální teplota: {lastData?.temperature}°C Aktuální vlhkost:{" "}
-        {lastData?.humidity}%
+        Aktuální teplota: {+lastData?.temperature?.toFixed(2)}°C Aktuální
+        vlhkost: {+lastData?.humidity?.toFixed(2)}%
         {data?.length === 0 || data === undefined ? (
           <div className="text-center bg-white p-3 mt-3">
             There are no records to display
