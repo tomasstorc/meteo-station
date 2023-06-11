@@ -50,5 +50,6 @@ export default function averaging(data: Array<IData>, interval: number) {
     });
   }
 
+
   return downsampledData;
 }
