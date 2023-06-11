@@ -9,7 +9,7 @@ import {
   Tooltip,
 } from "recharts";
 
-const GraphComponent = ({ name, color, data, type }) => {
+const GraphComponent = ({ name, color, data, type, unit }) => {
   return (
     <Card className="p-2 m-3 ">
       <Typography variant="h6">{name}</Typography>
@@ -28,7 +28,7 @@ const GraphComponent = ({ name, color, data, type }) => {
               </linearGradient>
             </defs>
             <XAxis dataKey="date" />
-            <YAxis dataKey={type} />
+            <YAxis dataKey={type} unit={unit} />
             <CartesianGrid strokeDasharray="3 3" />
             <Tooltip />
             <Area
@@ -37,6 +37,7 @@ const GraphComponent = ({ name, color, data, type }) => {
               stroke={color}
               fillOpacity={1}
               fill={`url(#color${color} )`}
+              unit={unit}
             />
           </AreaChart>
         </Typography>

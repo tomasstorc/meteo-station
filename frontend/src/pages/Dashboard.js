@@ -148,12 +148,14 @@ const Dashboard = () => {
               color={"#FFA503"}
               data={data}
               type="temperature"
+              unit="°C"
             />
             <GraphComponent
               name={"Humidity"}
               color={"#145FF4"}
               data={data}
               type="humidity"
+              unit="%"
             />{" "}
           </>
         )}
