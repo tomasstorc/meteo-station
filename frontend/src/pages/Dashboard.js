@@ -76,6 +76,8 @@ const Dashboard = () => {
                 <MenuItem value={5}>5 minut</MenuItem>
                 <MenuItem value={10}>10 minut</MenuItem>
                 <MenuItem value={30}>30 minut</MenuItem>
+                <MenuItem value={60}>1 hodina</MenuItem>
+                <MenuItem value={1440}>1 den</MenuItem>
               </Select>
             </FormControl>
           </div>
@@ -146,12 +148,14 @@ const Dashboard = () => {
               color={"#FFA503"}
               data={data}
               type="temperature"
+              unit="°C"
             />
             <GraphComponent
               name={"Humidity"}
               color={"#145FF4"}
               data={data}
               type="humidity"
+              unit="%"
             />{" "}
           </>
         )}

@@ -33,6 +33,7 @@ export default function averaging(data: Array<IData>, interval: number) {
     temperature: sumTemperature / count,
     humidity: sumHumidity / count,
   });
+  console.log(downsampledData);
 
   return downsampledData;
 }
