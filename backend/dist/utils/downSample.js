@@ -1,35 +1,45 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 function averaging(data, interval) {
-    const downsampledData = [];
-    let currentTimestamp = data[0].date.getTime();
+    let currentIntervalStart = Math.floor(data[0].date.getTime() / interval) * interval;
     let sumTemperature = 0;
     let sumHumidity = 0;
     let count = 0;
+    const downsampledData = [];
     for (let i = 0; i < data.length; i++) {
-        if (+data[i].date < currentTimestamp + interval) {
+        const currentTimestamp = data[i].date.getTime();
+        if (currentTimestamp <= currentIntervalStart + interval) {
+            console.log(currentIntervalStart, currentTimestamp, interval);
             sumTemperature += data[i].temperature;
             sumHumidity += data[i].humidity;
             count++;
         }
         else {
+            console.log(currentIntervalStart, currentTimestamp, interval);
             downsampledData.push({
-                // convert timestamp to normal date
-                date: new Date(currentTimestamp).toLocaleString(),
+                date: new Date(currentIntervalStart),
                 temperature: sumTemperature / count,
                 humidity: sumHumidity / count,
             });
-            currentTimestamp += interval;
+            currentIntervalStart += interval;
+            // Skip data points that are outside the next interval
+            while (currentTimestamp >= currentIntervalStart + interval) {
+                console.log(currentIntervalStart, currentTimestamp, interval);
+                currentIntervalStart += interval;
+            }
             sumTemperature = data[i].temperature;
             sumHumidity = data[i].humidity;
             count = 1;
         }
     }
-    downsampledData.push({
-        date: new Date(currentTimestamp).toLocaleString(),
-        temperature: sumTemperature / count,
-        humidity: sumHumidity / count,
-    });
+    // Push the last interval if it has any data points
+    if (count > 0) {
+        downsampledData.push({
+            date: new Date(currentIntervalStart),
+            temperature: sumTemperature / count,
+            humidity: sumHumidity / count,
+        });
+    }
     return downsampledData;
 }
 exports.default = averaging;

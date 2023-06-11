@@ -11,11 +11,11 @@ function processData(rawData, granularity) {
         return rawData;
     }
     const timeDifference = rawData[rawData.length - 1].date - rawData[0].date;
-    if (interval > timeDifference / rawData.length) {
+    if (interval < timeDifference / rawData.length) {
         // Upsampling
         return (0, upsample_1.default)(rawData, interval);
     }
-    else if (interval < timeDifference / rawData.length) {
+    else if (interval > timeDifference / rawData.length) {
         // Downsampling
         return (0, downSample_1.default)(rawData, interval);
     }

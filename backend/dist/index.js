@@ -15,7 +15,6 @@ const data_controller_1 = __importDefault(require("./controller/data-controller"
 const auth_controller_1 = __importDefault(require("./controller/auth-controller"));
 const device_controller_1 = __importDefault(require("./controller/device-controller"));
 const key_controller_1 = __importDefault(require("./controller/key-controller"));
-const db_seed_1 = __importDefault(require("./utils/db-seed"));
 const app = (0, express_1.default)();
 const port = process.env.PORT || 8080;
 dotenv_1.default.config();
@@ -33,8 +32,7 @@ app.get("*", (req, res) => {
     res.sendFile(path_1.default.join(__dirname + "/public/index.html"));
 });
 (0, db_connect_1.default)();
-if (process.env.NODE_ENV !== "production")
-    (0, db_seed_1.default)();
+// if (process.env.NODE_ENV !== "production") dbSeed();
 app.listen(port, () => {
     logger_1.default.info(`server running at port ${port}`);
 });
