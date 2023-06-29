@@ -10,7 +10,7 @@ jobs:
       contents: read
     runs-on: ubuntu-latest
     steps:
-      - uses: tomasstorc/devops/actions/terraform-validate@v1
+      - uses: tomasstorc/devops/actions/terraform-validate@main
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           branch: main
