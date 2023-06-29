@@ -37,6 +37,7 @@ router.get(
             : new Date(Date.now() - 1000 * (60 * 60)),
         },
       },
+
       (err: CallbackError | undefined, foundData: Array<Document<IData>>) => {
         if (err) return res.status(400).json(new ErrorResponse(err));
         if (foundData.length === 0)
